@@ -5,7 +5,7 @@ import 'package:rentmything/res/app_colors.dart';
 
 class RentedDetail extends StatefulWidget {
   final Map<String,dynamic> data;
-  RentedDetail({required this.data, Key? key}) : super(key: key);
+  const RentedDetail({required this.data, super.key});
 
   @override
   State<RentedDetail> createState() => _RentedDetailState();
@@ -20,7 +20,7 @@ class _RentedDetailState extends State<RentedDetail> {
   void initState() {
     // TODO: implement initState
     _streamController = StreamController<String>();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _streamController.add(_calculateTimeLeft());
     });
     super.initState();
@@ -76,7 +76,7 @@ class _RentedDetailState extends State<RentedDetail> {
           onTap: (){
             Navigator.pop(context);
           },
-          child: Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,),
+          child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,),
         ),
       ),
       body: SafeArea(
@@ -92,7 +92,7 @@ class _RentedDetailState extends State<RentedDetail> {
               Text('Rent End : ${widget.data['end_date']}'),
               Text(
                 'Total Agreement Duration: $days days, $hours hours, $minutes minutes',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               // Text('Time Left :$days days, $hours hours, $minutes'),
               // StreamBuilder<String>(
@@ -105,18 +105,18 @@ class _RentedDetailState extends State<RentedDetail> {
               //     }
               //   },
               // ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               LinearProgressIndicator(
                 value: progress,
                 backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(
+                valueColor: const AlwaysStoppedAnimation<Color>(
                   Colors.blue,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 'Progress: ${(progress * 100).toStringAsFixed(2)}%',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),

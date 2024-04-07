@@ -19,7 +19,7 @@ class _RentOut1State extends State<RentOut1> {
 
   //function for get all categories....
 
-  Map<String,dynamic> allCategories = {};
+  List<dynamic> allCategories = [];
 
   Future<dynamic> getCategory() async {
     String url = AppUrl.getallCategory;
@@ -35,8 +35,8 @@ class _RentOut1State extends State<RentOut1> {
         var responseData = jsonDecode(response.body);
         print(responseData);
         allCategories.clear();
-        allCategories.addAll(responseData);
-        print(allCategories);
+        allCategories.addAll(responseData['data']);
+        print(" All category : $allCategories");
         return jsonDecode(response.body);
       } else {
         // API call failed
@@ -56,7 +56,7 @@ class _RentOut1State extends State<RentOut1> {
       appBar: AppBar(
         leading: InkWell(onTap: (){
           Navigator.pop(context);
-        },child: Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
+        },child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
       ),
       body: SafeArea(
         child: Padding(
@@ -81,7 +81,7 @@ class _RentOut1State extends State<RentOut1> {
                       if(snapshot.connectionState == ConnectionState.waiting){
                         return const Center(child: CircularProgressIndicator(),);
                       }else if(snapshot.hasError){
-                        return Center(child: Text('Error'),);
+                        return const Center(child: Text('Error'),);
                       }
                       return Expanded(
                         child: GridView.builder(
@@ -95,7 +95,7 @@ class _RentOut1State extends State<RentOut1> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: InkWell(
                                   onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> RentOut2(itemName: '${allCategories['data'][index]['name'].toString()}')));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> RentOut2(itemName: allCategories[index]['name'].toString())));
                                   },
                                   child: Container(
                                     height: 90,
@@ -103,8 +103,8 @@ class _RentOut1State extends State<RentOut1> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(16),
-                                        border: Border.all(width: 0.5,color: Color.fromRGBO(167,167,167, 0.51)),
-                                        boxShadow: [
+                                        border: Border.all(width: 0.5,color: const Color.fromRGBO(167,167,167, 0.51)),
+                                        boxShadow: const [
                                           BoxShadow(
                                             offset: Offset(2,2),
                                             blurRadius: 10,
@@ -119,7 +119,7 @@ class _RentOut1State extends State<RentOut1> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           // Image.network('${allCategories['data'][index]['icon'].toString()}'),
-                                          Text('${allCategories['data'][index]['name'].toString()}',style: TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),),
+                                          Text(allCategories[index]['name'].toString(),style: const TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),),
                                         ],
                                       ),
                                     ),

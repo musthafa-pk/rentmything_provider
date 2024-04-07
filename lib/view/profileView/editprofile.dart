@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
@@ -9,7 +8,7 @@ import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/profileView/profileView.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  const EditProfile({super.key});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -86,7 +85,7 @@ class _EditProfileState extends State<EditProfile> {
         dynamic responseData = jsonDecode(response.body);
         Util.flushBarErrorMessage('${responseData['message']}', Icons.verified, Colors.green, context);
         print(responseData['data']);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>ProfileView()), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const ProfileView()), (route) => false);
         // setState(() {
         //   name.text = responseData['data']['name'];
         //   email.text = responseData['data']['email'];
@@ -143,11 +142,11 @@ class _EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: Colors.black,
                       )),
-                  Text(
+                  const Text(
                     'Profile',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -156,24 +155,24 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Stack(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 50,
                       ),
-                     isEditing == true ? Positioned(
+                     isEditing == true ? const Positioned(
                         bottom: 0,
                           right: 0,
-                          child: Icon(Icons.edit)):Text(''),
+                          child: Icon(Icons.edit)):const Text(''),
                     ],
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               SizedBox(
                 child: MyTextFieldWidget(
                   labelName: 'User Name',
@@ -198,7 +197,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               
 
-              SizedBox(height: 100),
+              const SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -238,7 +237,7 @@ class MyButtonWidget extends StatelessWidget {
   Color bgColor ;
   Function? onPressed;
 
-  MyButtonWidget({required this.buttonName,required this.bgColor,required this.onPressed,Key? key}) : super(key: key);
+  MyButtonWidget({required this.buttonName,required this.bgColor,required this.onPressed,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +251,7 @@ class MyButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: bgColor),
         onPressed: onPressed as void Function()?,
-        child: Text(buttonName,style: TextStyle(color: Colors.white),),
+        child: Text(buttonName,style: const TextStyle(color: Colors.white),),
       ),
     );
   }
@@ -264,7 +263,9 @@ class MyTextFieldWidget extends StatelessWidget{
   Function? validator;
   bool? enabled;
   bool isObsecure;
-  MyTextFieldWidget({required this.labelName,required this.controller,required this.validator,this.enabled,this.isObsecure = false,Key? key}) : super(key: key);
+  IconData? icon;
+  Function? paste;
+  MyTextFieldWidget({this.paste,this.icon,required this.labelName,required this.controller,required this.validator,this.enabled,this.isObsecure = false,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -278,7 +279,7 @@ class MyTextFieldWidget extends StatelessWidget{
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
+              child: SizedBox(
                 width: 323.0,
                 height: 40.0,
                 child: TextFormField(
@@ -286,17 +287,19 @@ class MyTextFieldWidget extends StatelessWidget{
                   enabled: enabled,
                   obscureText: isObsecure,
                   validator:  (value) {
-
+                    return null;
                   },
-
                   decoration: InputDecoration(
                     filled: true,
+                    suffixIcon: InkWell(
+                      onTap: (){},
+                        child: Icon(icon)),
                     fillColor: AppColors.color2,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6.0),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                   ),
                 ),
               )

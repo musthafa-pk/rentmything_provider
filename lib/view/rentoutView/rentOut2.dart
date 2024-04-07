@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rentmything/res/app_colors.dart';
 
@@ -10,6 +9,7 @@ import 'package:rentmything/res/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/rentoutView/rentOutVehicle.dart';
+import 'package:rentmything/view/rentoutView/rentoutOther.dart';
 
 class RentOut2 extends StatefulWidget {
   String itemName;
@@ -67,7 +67,7 @@ class _RentOut2State extends State<RentOut2> {
       appBar: AppBar(
         leading: InkWell(onTap: (){
           Navigator.pop(context);
-        },child: Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+        },child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
       ),
       body: SafeArea(
         child: Padding(
@@ -77,20 +77,20 @@ class _RentOut2State extends State<RentOut2> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Text('${widget.itemName}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16 ),),
+                  child: Text(widget.itemName,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16 ),),
                 ),
                 const SizedBox(height: 20,),
                 FutureBuilder(
                     future: getSubcategory(),
                     builder: (context,snapshot) {
                       if(snapshot.connectionState == ConnectionState.waiting){
-                        return Center(child: CircularProgressIndicator(),);
+                        return const Center(child: CircularProgressIndicator(),);
                       }else if(snapshot.hasError){
-                        return Center(child: Text('Some error occured'),);
+                        return const Center(child: Text('Some error occured'),);
                       }else
                         return Expanded(
                           child: GridView.builder(
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                   mainAxisSpacing: 10,
                                   crossAxisSpacing: 10,
                                   crossAxisCount:(Orientation == Orientation.portrait) ? 2 : 3),
@@ -98,7 +98,11 @@ class _RentOut2State extends State<RentOut2> {
                               itemBuilder: (BuildContext context,int index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: InkWell(onTap: (){
+                                  child: InkWell(
+                                    onTap: (){
+                                      if(widget.itemName == 'other'){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>RentOutOther(category: widget.itemName, subCategory: '${allSubCategories['data'][index]['name']}')));
+                                      }
                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>RentOutVehicle(category:widget.itemName,subcategory:' ${allSubCategories['data'][index]['name']}',)));
                                   },
                                     child: Container(
@@ -107,7 +111,7 @@ class _RentOut2State extends State<RentOut2> {
                                       decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(16),
-                                          border: Border.all(width: 0.5,color: Color.fromRGBO(167,167,167, 0.51)),
+                                          border: Border.all(width: 0.5,color: const Color.fromRGBO(167,167,167, 0.51)),
                                           boxShadow: const[
                                             BoxShadow(
                                               offset: Offset(2,2),
@@ -122,8 +126,9 @@ class _RentOut2State extends State<RentOut2> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            SizedBox(height: 24,width: 24,child: Image.network('${allSubCategories['data'][index]['icon']}'),),
-                                            Text('${allSubCategories['data'][0]['name']}',style: TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),)
+                                            // SizedBox(height: 24,width: 24,child: Image.network('${allSubCategories['data'][index]['icon']}'),),
+                                            Text('${allSubCategories['data'][index]['name']}',
+                                              style: const TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),)
                                           ],
                                         ),
                                       ),

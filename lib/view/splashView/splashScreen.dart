@@ -4,7 +4,7 @@ import '../../view_model/services/splash_services.dart';
 
 
 class Splash extends StatefulWidget {
-  const Splash({Key? key}) : super(key: key);
+  const Splash({super.key});
 
   @override
   State<Splash> createState() => _SplashState();
@@ -22,13 +22,14 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(15.0),
           child: SizedBox(
             child: Image(
-              image: AssetImage('assets/images/newlogo.png'),
+              image: AssetImage('assets/images/LOGO 2.png'),
             ),
           ),
         ),),

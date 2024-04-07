@@ -9,7 +9,7 @@ import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RentedItems extends StatefulWidget {
-  const RentedItems({Key? key});
+  const RentedItems({super.key});
 
   @override
   State<RentedItems> createState() => _RentedItemsState();
@@ -79,7 +79,7 @@ class _RentedItemsState extends State<RentedItems> {
           highlightColor: Colors.grey[100]!,
           child: Container(
             height: 100,
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
@@ -120,7 +120,7 @@ class _RentedItemsState extends State<RentedItems> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(19),
                       border: Border.all(
-                          width: 0.5, color: Color.fromRGBO(167, 167, 167, 0.51)),
+                          width: 0.5, color: const Color.fromRGBO(167, 167, 167, 0.51)),
                     ),
                     width: MediaQuery.of(context).size.width / 1.1,
                     child: Column(
@@ -128,19 +128,19 @@ class _RentedItemsState extends State<RentedItems> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: const EdgeInsets.only(left: 10),
                               child: Container(
                                 height: 80,
                                 width: 80,
                                 decoration: BoxDecoration(
                                     color: Colors.black,
                                     borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                         image: AssetImage('assets/images/van.jpg'),
                                         fit: BoxFit.cover)),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20.0,
                             ),
                             Padding(
@@ -152,12 +152,12 @@ class _RentedItemsState extends State<RentedItems> {
                                     children: [
                                       Text(
                                         '₹ ${rentedData[index]['prod_id']['price']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                             letterSpacing: 1),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Container(
@@ -165,11 +165,11 @@ class _RentedItemsState extends State<RentedItems> {
                                             color: AppColors.color1,
                                             borderRadius: BorderRadius.circular(18)),
                                         child: Padding(
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                               left: 9, top: 2, bottom: 2, right: 9),
                                           child: Text(
                                             '${rentedData[index]['prod_id']['subtype1']}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 10,
                                                 color: Color.fromRGBO(
@@ -181,10 +181,10 @@ class _RentedItemsState extends State<RentedItems> {
                                     ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(4),
                                     child: Text(
                                       '${rentedData[index]['prod_id']['name']}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
                                           color: Color.fromRGBO(0, 0, 0, 0.66)),
@@ -192,17 +192,17 @@ class _RentedItemsState extends State<RentedItems> {
                                   ),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.location_pin,
                                         color: Colors.blue,
                                         size: 16,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
                                         '${rentedData[index]['prod_id']['location']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 10,
                                             color: Color.fromRGBO(0, 0, 0, 0.66)),
@@ -221,7 +221,7 @@ class _RentedItemsState extends State<RentedItems> {
                             onTap: (){
                               // Navigator.push(context, MaterialPageRoute(builder: (context)=>RentedDetail(data: snapshot.data[index],)));
                             },
-                            child: Padding(
+                            child:  Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +248,7 @@ class _RentedItemsState extends State<RentedItems> {
                                           child: Flexible(
                                               child: Text(
                                                 // '${snapshot.data[index]['time_left']}'
-                                                'ssssss left'
+                                                '${rentedData[index]['time_left']}'
                                                 ,
                                                 style: TextStyle(
                                                     fontSize: 8,

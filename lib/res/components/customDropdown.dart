@@ -5,7 +5,7 @@ class CustomDropdown extends StatefulWidget {
   final String hintText;
   final ValueChanged<String> onChanged;
 
-  CustomDropdown({
+  const CustomDropdown({super.key, 
     required this.options,
     this.hintText = '',
     required this.onChanged,
@@ -23,9 +23,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(border: InputBorder.none),
+        decoration: const InputDecoration(border: InputBorder.none),
         value: _selectedOption,
-        style: TextStyle(color: _selectedOption != null ? Colors.white : Colors.black), // Set the text color based on whether an option is selected or not
+        style: TextStyle(color: Colors.white), // Set the text color based on whether an option is selected or not
         onChanged: (value) {
           setState(() {
             _selectedOption = value;
@@ -34,14 +34,14 @@ class _CustomDropdownState extends State<CustomDropdown> {
         },
         hint: Text(
           widget.hintText,
-          style: TextStyle(color: Colors.white), // Set the hint text color to black
+          style: const TextStyle(color: Colors.white), // Set the hint text color to black
         ),
         items: widget.options.map((option) {
           return DropdownMenuItem<String>(
             value: option,
             child: Text(
               option,
-              style: TextStyle(color: Colors.black), // Set the dropdown menu item text color to black
+              style: const TextStyle(color: Colors.black), // Set the dropdown menu item text color to black
             ),
           );
         }).toList(),

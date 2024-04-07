@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rentmything/res/app_colors.dart';
+import 'package:rentmything/view/authView/forgotpassword.dart';
 
 import '../../res/components/button.dart';
 import '../../utils/routes/route_names.dart';
@@ -14,7 +15,7 @@ import '../../view_model/auth_view_model.dart';
 
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -140,9 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     InkWell(
                       onTap: (){
-
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgotpassword()));
                       },
-                      child: Text('Forgot password?', style: TextStyle(
+                      child: const Text('Forgot password?', style: TextStyle(
                         fontFamily: 'Poppins',color: AppColors.color1,
                         fontSize: 10,
                       ),),
@@ -175,39 +176,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 Center(child: Text('or', style: GoogleFonts.poppins(
                     color: Colors.grey, fontSize: 10),)),
                 const SizedBox(height: 10,),
-                Container(
-                  height: 50,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 16.0,
-                          spreadRadius: .2
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.network(
-                            'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png',
-                            scale: 30,),
-                          const SizedBox(width: 10,),
-                          Text('Login with Google', style: GoogleFonts.poppins(
-                              color: Colors.black38, fontSize: 13),),
+                InkWell(
+                  onTap: (){
+                    Util.toastMessage('This function not available now');
+                  },
+                  child: Container(
+                    height: 50,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 16.0,
+                            spreadRadius: .2
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png',
+                              scale: 30,),
+                            const SizedBox(width: 10,),
+                            Text('Login with Google', style: GoogleFonts.poppins(
+                                color: Colors.black38, fontSize: 13),),
 
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Row(
@@ -219,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           Navigator.pushNamed(context, RoutesName.signUp);
                         },
-                        child: Text('Register', style: TextStyle(fontFamily: 'Poppins',fontSize: 10,
+                        child: const Text('Register', style: TextStyle(fontFamily: 'Poppins',fontSize: 10,
                         color: AppColors.color1)))
                   ],
                 )

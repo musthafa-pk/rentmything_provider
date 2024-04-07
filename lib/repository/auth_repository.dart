@@ -11,7 +11,7 @@ class AuthRepository{
       dynamic response = await apiServices.postAPiResponse(AppUrl.loginApi, data);
       return response;
     }catch(e){
-      throw e;
+      rethrow;
     }
   }
 
@@ -21,7 +21,7 @@ class AuthRepository{
       dynamic response = await apiServices.postAPiResponse(AppUrl.userAdd, data);
       return response;
     }catch(e){
-      throw e;
+      rethrow;
     }
   }
 }

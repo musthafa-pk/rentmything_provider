@@ -15,10 +15,10 @@ class _SuccessViewState extends State<SuccessView> {
   void initState() {
     // TODO: implement initState
     // Add a delay before navigating to the home page
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavigationPage()),
+        MaterialPageRoute(builder: (context) => const BottomNavigationPage()),
       );
     });
     super.initState();
@@ -31,13 +31,13 @@ class _SuccessViewState extends State<SuccessView> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Success...',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 28,color: AppColors.color1),),
+          const Text('Success...',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 28,color: AppColors.color1),),
           Image.asset('assets/images/success_image.jpg'),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left:25.0,right: 25.0),
+                padding: EdgeInsets.only(left:25.0,right: 25.0),
                 child: Text('Step back and relax. Your ad \n      is under verification.',style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400
@@ -69,12 +69,12 @@ class MyButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final VoidCallback clickme;
-  MyButton({
+  const MyButton({
     required this.title,
     required this.backgroundColor,
     required this.textColor,
     required this.clickme,
-    Key? key}) : super(key:key);
+    super.key});
 
   @override
   Widget build(BuildContext context) {

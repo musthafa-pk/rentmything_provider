@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rentmything/res/app_colors.dart';
-import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
 
 
 class FinishedAds extends StatefulWidget {
@@ -13,7 +11,7 @@ class FinishedAds extends StatefulWidget {
 class _FinishedAdsState extends State<FinishedAds> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body:  Center(
           child: Text('rent taken finished ads...'),
         )

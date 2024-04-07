@@ -7,10 +7,12 @@ class RentPurchaseView extends StatefulWidget {
   State<RentPurchaseView> createState() => _RentPurchaseViewState();
 }
 
+
+
 class _RentPurchaseViewState extends State<RentPurchaseView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text('Rent taken view.....'),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -15,6 +16,9 @@ class Util{
   static String? userEmail;
   static String? userPhoneNumber;
   static String? userName;
+  
+  static final Future<SharedPreferences>  prefs = SharedPreferences.getInstance();
+
 
   // next field focused in textField
   static fieldFocusChange(
@@ -56,7 +60,7 @@ class Util{
         margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
         padding: const EdgeInsets.all(15),
         message: message,
-        backgroundColor: Color.fromRGBO(255, 255, 255, 0.5),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 0.5),
         messageColor: Colors.black,
         duration: const Duration(seconds: 3),
       )..show(context),
@@ -83,12 +87,35 @@ class Util{
     return formattedDate;
   }
 
-  static void makingPhonecall(BuildContext context)async{
-    bool? res = await FlutterPhoneDirectCaller.callNumber('9544688490');
+  static void makingPhonecall(BuildContext context,String phone_number)async{
+    bool? res = await FlutterPhoneDirectCaller.callNumber(phone_number);
     if(!res!) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(
           'Couldnot make a phone call'
       )));
     }
   }
+//sharedprefrences clearing using for logout
+  static Future<void> clearUserPrefs() async {
+    final userPreference = await SharedPreferences.getInstance();
+    await userPreference.remove('token');
+    await userPreference.remove('userId');
+    await userPreference.remove('userEmail');
+    await userPreference.remove('userName');
+    Util.userId = '';
+    Util.userEmail = '';
+    Util.userName = '';
+  }
+
+  //launch url
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
+
 }

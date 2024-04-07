@@ -1,26 +1,16 @@
-import 'dart:convert';
 
 
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rentmything/res/app_colors.dart';
 
-import 'package:rentmything/res/app_url.dart';
-import 'package:http/http.dart' as http;
 import 'package:rentmything/utils/utls.dart';
-import 'package:rentmything/view/cartView/cartView.dart';
-import 'package:rentmything/view/chatView/chatView.dart';
 import 'package:rentmything/view/favourite/favourite.dart';
-import 'package:rentmything/view/homeView/customTabbar.dart';
+import 'package:rentmything/view/homeView/Machineries.dart';
+import 'package:rentmything/view/homeView/elctronicscategory.dart';
 import 'package:rentmything/view/homeView/popular.dart';
+import 'package:rentmything/view/homeView/tools.dart';
 import 'package:rentmything/view/homeView/vehiclescategory.dart';
-import 'package:rentmything/view/myAdView/myAdView.dart';
 import 'package:rentmything/view/notificationView/notificationView.dart';
-import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
-import 'package:rentmything/view/profileView/profileView.dart';
-import 'package:rentmything/view/rentoutView/rentOut1.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -116,11 +106,11 @@ class _HomeViewState extends State<HomeView> {
   // }
 
   final _TabPages = <Widget>[
-    PopularView(),
+    const PopularView(),
     VehiclesCategory(category: 'vehicles',),
-    VehiclesCategory(category: 'Electronics',),
-    VehiclesCategory(category: 'Machineries',),
-    VehiclesCategory(category: 'Tools',),
+    ElectronicsCategory(category: 'Electronics',),
+    Machineries(category: 'Machineries',),
+    Tools(category: 'Tools',),
   ];
 
   final _Tabs = <Tab>[
@@ -148,7 +138,7 @@ class _HomeViewState extends State<HomeView> {
             toolbarHeight: MediaQuery.of(context).size.height/4.3,
             automaticallyImplyLeading: false,
             flexibleSpace: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.color1,
               ),
               child: Padding(
@@ -156,11 +146,11 @@ class _HomeViewState extends State<HomeView> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          const Text(
                             'Rent My Thing',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
@@ -180,7 +170,7 @@ class _HomeViewState extends State<HomeView> {
                                 },
                                 child: Stack(
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       child: Image(
                                         image: AssetImage(
                                             'assets/icons/notification.png'),
@@ -195,7 +185,7 @@ class _HomeViewState extends State<HomeView> {
                                       child: Container(
                                         height: 10,
                                         width: 10,
-                                        padding: EdgeInsets.all(3),
+                                        padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(
                                           color: AppColors.color6, // or any other color you want for the badge background
                                           borderRadius: BorderRadius.circular(10),
@@ -206,7 +196,7 @@ class _HomeViewState extends State<HomeView> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               InkWell(
@@ -214,9 +204,9 @@ class _HomeViewState extends State<HomeView> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => FavouritePage()));
+                                          builder: (context) => const FavouritePage()));
                                 },
-                                child: SizedBox(
+                                child: const SizedBox(
                                   child: Image(
                                     image:
                                     AssetImage('assets/icons/favourite.png'),

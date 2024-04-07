@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rentmything/utils/routes/route_names.dart';
 import 'package:rentmything/view/authView/loginScreen.dart';
-import 'package:rentmything/view/authView/registerScreen.dart';
 import 'package:rentmything/view/authView/signup.dart';
 import 'package:rentmything/view/bottomNavigationPage.dart';
-import 'package:rentmything/view/homeView/homeScreen.dart';
 import 'package:rentmything/view/splashView/splashScreen.dart';
 
 class Routes{
@@ -17,7 +15,7 @@ class Routes{
         return MaterialPageRoute(builder: (BuildContext context)=>const Splash());
 
       case RoutesName.home:
-        return MaterialPageRoute(builder: (BuildContext context)=> BottomNavigationPage());
+        return MaterialPageRoute(builder: (BuildContext context)=> const BottomNavigationPage());
 
       case RoutesName.login:
         return MaterialPageRoute(builder: (BuildContext context)=>const LoginScreen());

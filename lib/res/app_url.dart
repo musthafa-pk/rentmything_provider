@@ -1,16 +1,16 @@
 class AppUrl{
 
   // ip address from office network
-  static var baseUrl = 'http://192.168.1.12:3005';
+  // static var baseUrl = 'http://192.168.1.12:3006';
 
-  //ip address from my offic lap
+  //ip address from my office lap
   // static var baseUrl = 'http://192.168.1.5:3005';
 
   //ip address from mobile network
-  // static var baseUrl = 'http://192.168.110.96:3005';
+  // static var baseUrl = 'http://192.168.151.96:3005';
 
   //ip address from hosted network
-  // static var baseUrl = 'http://3.109.180.229:3005';
+  static var baseUrl = 'http://3.109.180.229:3006';
 
   //auth api
   static String loginApi = '$baseUrl/user/login';
@@ -66,6 +66,18 @@ class AppUrl{
   static String addrentdata = '$baseUrl/rent/addrentdata';
   //rented Data getting
   static String getRentedData = '$baseUrl/rent/renteddata';
+  // itemsearch
+  static String searchapi = '$baseUrl/products/search';
 
+  // notification
+  static String getnotification = "$baseUrl/notification/cus_getnotification";
 
+  static String readnotification = '$baseUrl/notification/readnotification';
+
+  static String deletenotification = '$baseUrl/notification/deletenotification';
+
+  //chat list
+  static String chatlist = '$baseUrl/chat/chatlist';
+  static String getsinglechat = '$baseUrl/chat/fullchat';
+  static String sendmessage = '$baseUrl/chat/savechat';
 }

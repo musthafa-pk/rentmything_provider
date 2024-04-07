@@ -6,11 +6,11 @@ class CustomTabBar extends StatefulWidget {
   final int currentIndex;
 
   const CustomTabBar({
-    Key? key,
+    super.key,
     required this.tabs,
     required this.onChanged,
     required this.currentIndex,
-  }) : super(key: key);
+  });
 
   @override
   _CustomTabBarState createState() => _CustomTabBarState();
@@ -31,7 +31,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
             widget.onChanged(index);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -48,7 +48,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                     Icons.ice_skating,
                     color: isSelected ? Colors.white : Colors.white60,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                 ],
                 Text(
                   tab.text ?? '',

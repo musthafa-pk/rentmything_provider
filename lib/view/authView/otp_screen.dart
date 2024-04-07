@@ -8,7 +8,7 @@ import 'package:rentmything/res/app_url.dart';
 import 'package:rentmything/view/bottomNavigationPage.dart';
 class OtpScreen extends StatefulWidget {
   String? email;
-  OtpScreen({required this.email,Key? key}) : super(key: key);
+  OtpScreen({required this.email,super.key});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -34,7 +34,7 @@ class _OtpScreenState extends State<OtpScreen> {
         // Successful API call
         var responseData = jsonDecode(response.body);
         print(responseData);
-        Navigator.push(context,MaterialPageRoute(builder: (context)=>BottomNavigationPage()));
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>const BottomNavigationPage()));
         return jsonDecode(response.body);
       } else {
         // API call failed
@@ -53,40 +53,46 @@ class _OtpScreenState extends State<OtpScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.arrow_circle_left,color: AppColors.color1,),
+        leading: InkWell(
+          onTap: (){},
+            child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('ON Progress......'),
-            Text('CODE',style: TextStyle(
+            const Text('CODE',style: TextStyle(
               fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
               color: AppColors.color1,
               fontSize: 80.0,
             ),),
-            Text('Verification',style: TextStyle(
+            const Text('Verification',style: TextStyle(
                 color: AppColors.color1,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins'
             ),),
-            SizedBox(height: 20.0,),
-            Text('Enter Verification code sent from team chaavie',textAlign:TextAlign.center,),
-            SizedBox(height: 20.0,),
+            const SizedBox(height: 20.0,),
+            Text('Enter Verification code recieved on ${widget.email}',textAlign:TextAlign.center,style: TextStyle(
+              fontFamily: 'Poppins'
+            ),),
+            const SizedBox(height: 20.0,),
             OtpTextField(
               numberOfFields: 6,
+
               fillColor: Colors.black.withOpacity(0.1),
               filled: true,
               keyboardType: TextInputType.number,
               focusedBorderColor: AppColors.color1,
               onSubmit: (code){
-                print('otp is ${code}');
+                print('otp is $code');
                 setState(() {
                   otp_data = code;
                 });
               },
             ),
-            SizedBox(height: 20.0,),
+            const SizedBox(height: 20.0,),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -96,7 +102,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor:AppColors.color1,
                   ),
-                  child: Text('Next',style: TextStyle(color: Colors.white),)),
+                  child: const Text('Next',style: TextStyle(color: Colors.white,fontFamily: 'Poppins'),)),
             )
           ],
         ),

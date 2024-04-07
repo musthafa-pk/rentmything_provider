@@ -14,8 +14,8 @@ class MyAdsView extends StatefulWidget {
 class _MyAdsViewState extends State<MyAdsView> {
 
   final _adTabPages = <Widget>[
-    OngoingAds(),
-    RentedItems()
+    const OngoingAds(),
+    const RentedItems()
   ];
 
   final _addTabs = <Tab>[
@@ -29,12 +29,12 @@ class _MyAdsViewState extends State<MyAdsView> {
         length: _addTabs.length,
         child: Scaffold(
             appBar: AppBar(
-              title: Center(child: Text('My Ads')),
+              title: const Center(child: Text('My Ads')),
               leading: InkWell(
                   onTap: (){
-                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>BottomNavigationPage()));
+                    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const BottomNavigationPage()));
                   },
-                  child: Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
               bottom: TabBar(tabs: _addTabs,
                 labelColor: AppColors.color1,
                 indicatorColor: AppColors.color1,),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
@@ -82,7 +81,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
         return responseData;
       } else {
         var responseData = jsonDecode(response.body);
-        print('failed response:${responseData}');
+        print('failed response:$responseData');
         Util.flushBarErrorMessage('${responseData['message']}',
             Icons.sms_failed, Colors.red, context);
         print("API request failed with status code: ${response.statusCode}");
@@ -95,6 +94,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
 
   @override
   void initState() {
+    vehiclescategory.clear();
     // TODO: implement initState
     getvehicles();
     super.initState();
@@ -105,15 +105,14 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
     return Scaffold(
       body: Column(
         children: [
-          // Text('${vehiclescategory}'),
           Expanded(
             child: FutureBuilder(
               future: getvehicles(),
               builder: (context,snapshot) {
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return Center(child: CircularProgressIndicator(),);
+                  return const Center(child: CircularProgressIndicator(),);
                 }if(snapshot.hasError){
-                  return Center(child: Text('Some error happened'),);
+                  return const Center(child: Text('Some error happened'),);
                 }if(snapshot.hasData){
                   return ListView.builder(
                     itemCount: snapshot.data.length,
@@ -134,22 +133,22 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                       borderRadius: BorderRadius.circular(19),
                                       border: Border.all(
                                           width: 0.5,
-                                          color: Color.fromRGBO(167, 167, 167, 0.51))),
+                                          color: const Color.fromRGBO(167, 167, 167, 0.51))),
                                   width: MediaQuery.of(context).size.width / 1.1,
                                   child: Row(
                                     children: [
-                                      Padding(padding: EdgeInsets.only(left: 10),
+                                      Padding(padding: const EdgeInsets.only(left: 10),
                                         child: Container(
                                           height: 80,
                                           width: 80,
                                           decoration: BoxDecoration(
                                               color: Colors.black,
                                               borderRadius: BorderRadius.circular(15),
-                                              image: DecorationImage(
+                                              image: const DecorationImage(
                                                   image: AssetImage('assets/images/van.jpg'),
                                                   fit: BoxFit.cover)),
                                         ),),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 20.0,
                                       ),
 
@@ -162,12 +161,12 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                               children: [
                                                 Text(
                                                   '₹ ${snapshot.data['data'][index]['price']}',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight: FontWeight.w500,
                                                       letterSpacing: 1),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 Container(
@@ -175,11 +174,11 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                                       color: AppColors.color1,
                                                       borderRadius: BorderRadius.circular(18)),
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(
+                                                    padding: const EdgeInsets.only(
                                                         left: 9, top: 2, bottom: 2, right: 9),
                                                     child: Text(
                                                       '${snapshot.data['data'][index]['subtype1']}',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontWeight: FontWeight.w700,
                                                           fontSize: 10,
                                                           color:
@@ -190,19 +189,19 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                                 ),
                                               ],
                                             ),
-                                            Padding(padding: EdgeInsets.all(4),
-                                              child: Text('${snapshot.data['data'][index]['name']}',style: TextStyle(fontWeight: FontWeight.w400,
+                                            Padding(padding: const EdgeInsets.all(4),
+                                              child: Text('${snapshot.data['data'][index]['name']}',style: const TextStyle(fontWeight: FontWeight.w400,
                                                   fontSize: 12,
                                                   color: Color.fromRGBO(0, 0, 0, 0.66)),),),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.location_pin,
                                                   color: Colors.blue,
                                                   size: 16,
                                                 ),
-                                                SizedBox(width: 10,),
-                                                Text('${snapshot.data['data'][index]['location']}',style: TextStyle(fontWeight: FontWeight.w400,
+                                                const SizedBox(width: 10,),
+                                                Text('${snapshot.data['data'][index]['location']}',style: const TextStyle(fontWeight: FontWeight.w400,
                                                     fontSize: 10,
                                                     color: Color.fromRGBO(0, 0, 0, 0.66)),)
                                               ],
@@ -219,14 +218,14 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                     onTap: (){
                                       addtofavourite('${snapshot.data['data'][index]['_id']}', context);
                                     },
-                                    child: SizedBox(height: 24,width: 24,child: Image(
+                                    child: const SizedBox(height: 24,width: 24,child: Image(
                                       image: AssetImage('assets/icons/unfavourite.png'),),
                                     ),
                                   ):InkWell(
                                   onTap: (){
                                     addtofavourite('${snapshot.data['data'][index]['_id']}', context);
                         },
-                          child: SizedBox(height: 24,width: 24,child: Image(
+                          child: const SizedBox(height: 24,width: 24,child: Image(
                             image: AssetImage('assets/icons/favourite.png'),),
                           ),
                         )
@@ -237,7 +236,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                       );
                     },);
                 }else{
-                  return Center(child: Text('Please restart your application'),);
+                  return const Center(child: Text('Please restart your application'),);
                 }
               }
             ),

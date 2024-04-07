@@ -17,7 +17,7 @@ class HomeRepository{
       return response = MovieListModel.fromJson(response);
 
     }catch(e){
-      throw e;
+      rethrow;
     }
   }
 }

@@ -61,9 +61,9 @@ class _FavouritePageState extends State<FavouritePage> {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(onTap: (){
-          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>BottomNavigationPage()));
-        },child: Icon(Icons.arrow_circle_left,color: AppColors.color1,size: 24,)),
-        title: Text('Favourites'),
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const BottomNavigationPage()));
+        },child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,size: 24,)),
+        title: const Text('Favourites'),
       ),
       body: SafeArea(
         child: Column(children: [
@@ -72,9 +72,9 @@ class _FavouritePageState extends State<FavouritePage> {
                 future: getfavourite(),
                 builder: (context,snapshot) {
                   if(snapshot.connectionState == ConnectionState.waiting){
-                    return Center(child: CircularProgressIndicator(),);
+                    return const Center(child: CircularProgressIndicator(),);
                   }else if(snapshot.hasError){
-                    return Center(child: Text('Some error occured....!'),);
+                    return const Center(child: Text('Some error occured....!'),);
                   }else{
                     return Center(
                       child: ListView.builder(
@@ -96,22 +96,22 @@ class _FavouritePageState extends State<FavouritePage> {
                                         borderRadius: BorderRadius.circular(19),
                                         border: Border.all(
                                             width: 0.5,
-                                            color: Color.fromRGBO(167, 167, 167, 0.51))),
+                                            color: const Color.fromRGBO(167, 167, 167, 0.51))),
                                     width: MediaQuery.of(context).size.width / 1.1,
                                     child: Row(
                                       children: [
-                                        Padding(padding: EdgeInsets.only(left: 10),
+                                        Padding(padding: const EdgeInsets.only(left: 10),
                                           child: Container(
                                             height: 80,
                                             width: 80,
                                             decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 borderRadius: BorderRadius.circular(15),
-                                                image: DecorationImage(
+                                                image: const DecorationImage(
                                                     image: AssetImage('assets/images/van.jpg'),
                                                     fit: BoxFit.cover)),
                                           ),),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 20.0,
                                         ),
                                         Padding(
@@ -123,19 +123,19 @@ class _FavouritePageState extends State<FavouritePage> {
                                                 children: [
                                                   Text(
                                                     '₹ ${favoritelist['data'][index]['prod_id']['price']}',
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.w500,
                                                         letterSpacing: 1),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 10,
                                                   ),
                                                   Container(
                                                     decoration: BoxDecoration(
                                                         color: AppColors.color1,
                                                         borderRadius: BorderRadius.circular(18)),
-                                                    child: Padding(
+                                                    child: const Padding(
                                                       padding: EdgeInsets.only(
                                                           left: 9, top: 2, bottom: 2, right: 9),
                                                       child: Text(
@@ -148,20 +148,20 @@ class _FavouritePageState extends State<FavouritePage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 60,
                                                   ),
-                                                  Icon(
+                                                  const Icon(
                                                     Icons.favorite,
                                                     color: Colors.pink,
                                                   )
                                                 ],
                                               ),
-                                              Padding(padding: EdgeInsets.all(4),
+                                              const Padding(padding: EdgeInsets.all(4),
                                                 child: Text('Van for rent 2018 Model',style: TextStyle(fontWeight: FontWeight.w400,
                                                     fontSize: 12,
                                                     color: Color.fromRGBO(0, 0, 0, 0.66)),),),
-                                              Row(
+                                              const Row(
                                                 children: [
                                                   Icon(
                                                     Icons.location_pin,

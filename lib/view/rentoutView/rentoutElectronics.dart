@@ -12,16 +12,16 @@ import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
 
-class RentOutVehicle extends StatefulWidget {
+class RentOutElectronics extends StatefulWidget {
   String category;
   String subcategory;
-  RentOutVehicle({required this.category,required this.subcategory,super.key});
+  RentOutElectronics({required this.category,required this.subcategory,super.key});
 
   @override
-  State<RentOutVehicle> createState() => _RentOutVehicleState();
+  State<RentOutElectronics> createState() => _RentOutElectronicsState();
 }
 
-class _RentOutVehicleState extends State<RentOutVehicle> {
+class _RentOutElectronicsState extends State<RentOutElectronics> {
 
   final GlobalKey<FormState> _vehicleformKey = GlobalKey<FormState>();
   String? image;
@@ -203,8 +203,8 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, yearNode, km_drivernNode);
                         },
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 10)
                         ),
                       ),
                     ),
@@ -305,8 +305,8 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, km_drivernNode, titleNode);
                         },
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 10)
                         ),
                       ),
                     ),
@@ -329,8 +329,8 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, titleNode, descriptionNode);
                         },
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 10)
                         ),
                       ),
                     ),
@@ -355,7 +355,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, descriptionNode, priceNode);
                         },
                         decoration    : const InputDecoration(
-                            border: InputBorder.none,
+                          border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 10),
                         ),
                       ),
@@ -406,7 +406,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                                     },
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(left: 10)
+                                        contentPadding: EdgeInsets.only(left: 10)
                                     ),
                                   ),
                                 ),
@@ -440,7 +440,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           };
                         },
                         decoration: const InputDecoration(
-                            border: InputBorder.none,
+                          border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 10),
                         ),
                       ),
@@ -460,7 +460,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                               }else{
                                 return Util.flushBarErrorMessage('Please check all fields', Icons.sms_failed, Colors.red, context);
                               }
-                        })),
+                            })),
 
                     const SizedBox(height: 10.0,),
 
