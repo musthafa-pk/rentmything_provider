@@ -9,6 +9,7 @@ import 'package:rentmything/main.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 import 'package:rentmything/utils/utls.dart';
+import 'package:rentmything/view/notificationView/notificationcontroller.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _NotificationPageState extends State<NotificationPage> {
         // Compare new notifications with existing notifications
         if (notifications.length > notificaitonlist.length) {
           // Trigger another function when new data is received
-          handleNewData();
+          handleNewData('New Notification','Rent my thing has a new notification');
           // Update the notificationList with new notifications
           setState(() {
             notificaitonlist.clear();
@@ -155,9 +156,9 @@ class _NotificationPageState extends State<NotificationPage> {
     // TODO: implement initState
     super.initState();
   }
-  void handleNewData() {
+  void handleNewData(String title,String message) {
     // Your code to handle new data
-   NotificationController.createNewNotification();
+   NotificationController.createNewNotification(title,message);
   }
   @override
   void dispose() {

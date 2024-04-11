@@ -22,7 +22,6 @@ class _RentedItemsState extends State<RentedItems> {
   void initState() {
     super.initState();
     getRentedData();
-    print('rented view page');
   }
 
   Future<void> getRentedData() async {

@@ -109,8 +109,12 @@ flutter:
     - assets/icons/profile.png
     - assets/icons/unfavourite.png
     - assets/icons/popular.png
+    - assets/icons/locationmarker.png
+    - assets/icons/searchicon.png
     - assets/lottie/loginanime.json
     - assets/lottie/notificationbell_anime.json
+    - assets/lottie/nodatafound.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

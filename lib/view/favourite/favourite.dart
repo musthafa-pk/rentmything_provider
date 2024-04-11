@@ -135,11 +135,11 @@ class _FavouritePageState extends State<FavouritePage> {
                                                     decoration: BoxDecoration(
                                                         color: AppColors.color1,
                                                         borderRadius: BorderRadius.circular(18)),
-                                                    child: const Padding(
+                                                    child:  Padding(
                                                       padding: EdgeInsets.only(
                                                           left: 9, top: 2, bottom: 2, right: 9),
                                                       child: Text(
-                                                        'Daily',
+                                                        '${favoritelist['data'][index]['prod_id']['subtype1']}',
                                                         style: TextStyle(
                                                             fontWeight: FontWeight.w700,
                                                             color:
@@ -157,11 +157,11 @@ class _FavouritePageState extends State<FavouritePage> {
                                                   )
                                                 ],
                                               ),
-                                              const Padding(padding: EdgeInsets.all(4),
-                                                child: Text('Van for rent 2018 Model',style: TextStyle(fontWeight: FontWeight.w400,
+                                               Padding(padding: EdgeInsets.all(4),
+                                                child: Text('${favoritelist['data'][index]['prod_id']['name']}',style: TextStyle(fontWeight: FontWeight.w400,
                                                     fontSize: 12,
                                                     color: Color.fromRGBO(0, 0, 0, 0.66)),),),
-                                              const Row(
+                                               Row(
                                                 children: [
                                                   Icon(
                                                     Icons.location_pin,
@@ -169,7 +169,7 @@ class _FavouritePageState extends State<FavouritePage> {
                                                     size: 16,
                                                   ),
                                                   SizedBox(width: 10,),
-                                                  Text('Kozhikode, West hill',style: TextStyle(fontWeight: FontWeight.w400,
+                                                  Text('${favoritelist['data'][index]['prod_id']['location']}',style: TextStyle(fontWeight: FontWeight.w400,
                                                       fontSize: 10,
                                                       color: Color.fromRGBO(0, 0, 0, 0.66)),)
                                                 ],

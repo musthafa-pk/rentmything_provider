@@ -161,6 +161,8 @@ class _PopularViewState extends State<PopularView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: InkWell(
         onTap: () {
@@ -282,148 +284,147 @@ class _PopularViewState extends State<PopularView> {
                   ),
                   SizedBox(
                     height: 120,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: rentedProducts.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> rentedItem =
-                        rentedProducts[index];
-                        DateTime startDate =
-                        DateTime.parse(rentedItem['start_date']);
-                        DateTime endDate =
-                        DateTime.parse(rentedItem['end_date']);
-                        DateTime now = DateTime.now();
-                        double progress = now.isBefore(endDate)
-                            ? now
-                            .difference(startDate)
-                            .inDays
-                            .toDouble() /
-                            endDate
-                                .difference(startDate)
-                                .inDays
-                                .toDouble()
-                            : 1.0;
-                        return
-                          Padding(
-                          padding: const EdgeInsets.only(
-                            left: 10.0,
-                            right: 10.0,
-                            bottom: 5.0,
-                          ),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 105,
-                              width: MediaQuery.of(context).size.width / 1.5,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: const Color.fromRGBO(
-                                    167,
-                                    167,
-                                    167,
-                                    0.51,
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    offset: Offset(2, 2),
-                                    blurRadius: 5,
-                                    color: Color.fromRGBO(0, 106, 152, 0.25),
-                                  )
-                                ],
+                    child: Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: rentedProducts.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> rentedItem =
+                          rentedProducts[index];
+                          DateTime startDate =
+                          DateTime.parse(rentedItem['start_date']);
+                          DateTime endDate =
+                          DateTime.parse(rentedItem['end_date']);
+                          DateTime now = DateTime.now();
+                          double progress = now.isBefore(endDate)
+                              ? now
+                              .difference(startDate)
+                              .inDays
+                              .toDouble() /
+                              endDate
+                                  .difference(startDate)
+                                  .inDays
+                                  .toDouble()
+                              : 1.0;
+                          return
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 10.0,
+                                right: 10.0,
+                                bottom: 5.0,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(2.0),
-                                      child: Text(
-                                        '${rentedProducts[index]['prod_id']['name']}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 12,
-                                        ),
+                              child: InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  height: 105,
+                                  width: MediaQuery.of(context).size.width / 1.5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      width: 0.5,
+                                      color: const Color.fromRGBO(
+                                        167,
+                                        167,
+                                        167,
+                                        0.51,
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        offset: Offset(2, 2),
+                                        blurRadius: 5,
+                                        color: Color.fromRGBO(0, 106, 152, 0.25),
+                                      )
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(
-                                          width: 80,
-                                          child: Flexible(
-                                            child: Text(
-                                              '10 Month Agreement',
-                                              style: TextStyle(
-                                                fontSize: 8,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.red,
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                        Padding(
+                                          padding: EdgeInsets.all(2.0),
+                                          child: Text(
+                                            '${rentedProducts[index]['prod_id']['name']}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: Flexible(
-                                            child: Text(
-                                              '${rentedProducts[index]['time_left']}',
-                                              style: TextStyle(
-                                                fontSize: 8,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.red,
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            SizedBox(
+                                              width: 80,
+                                              child: Flexible(
+                                                child: Text(
+                                                  '#total rent period',
+                                                  style: TextStyle(
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.red,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(
+                                              width: 80,
+                                              child: Flexible(
+                                                child: Text(
+                                                  '${rentedProducts[index]['time_left']}',
+                                                  style: TextStyle(
+                                                    fontSize: 8,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.red,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 10.0,
+                                            bottom: 10.0,
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            value: progress,
+                                            backgroundColor: const Color.fromRGBO(
+                                              217,
+                                              217,
+                                              217,
+                                              1,
+                                            ),
+                                            color: const Color.fromRGBO(
+                                              25,
+                                              178,
+                                              0,
+                                              1,
+                                            ),
+                                            minHeight: 8.0,
+                                            borderRadius: const BorderRadius.all(
+                                              Radius.circular(10),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 10.0,
-                                        bottom: 10.0,
-                                      ),
-                                      child: LinearProgressIndicator(
-                                        value: progress,
-                                        backgroundColor: const Color.fromRGBO(
-                                          217,
-                                          217,
-                                          217,
-                                          1,
-                                        ),
-                                        color: const Color.fromRGBO(
-                                          25,
-                                          178,
-                                          0,
-                                          1,
-                                        ),
-                                        minHeight: 8.0,
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                        },
+                      ),
+                    )
                   ),
                 ],
               ),
-              ElevatedButton(onPressed: (){
-                NotificationController.createNewNotification();
-              }, child: Text('Test')),
               const Padding(
                 padding: EdgeInsets.only(left: 20, top: 10, bottom: 10.0),
                 child: Text(

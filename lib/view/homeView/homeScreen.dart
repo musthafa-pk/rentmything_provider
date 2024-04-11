@@ -8,6 +8,8 @@ import 'package:rentmything/view/favourite/favourite.dart';
 import 'package:rentmything/view/homeView/Machineries.dart';
 import 'package:rentmything/view/homeView/elctronicscategory.dart';
 import 'package:rentmything/view/homeView/popular.dart';
+import 'package:rentmything/view/homeView/searchPage.dart';
+import 'package:rentmything/view/homeView/searchresult.dart';
 import 'package:rentmything/view/homeView/tools.dart';
 import 'package:rentmything/view/homeView/vehiclescategory.dart';
 import 'package:rentmything/view/notificationView/notificationView.dart';
@@ -121,6 +123,21 @@ class _HomeViewState extends State<HomeView> {
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Tools',),
   ];
 
+
+  TextEditingController _searchController = TextEditingController();
+  TextEditingController _suggestionController = TextEditingController();
+  List<String> suggestions = [];
+
+  List<String> getSuggestions(String query) {
+    // In a real application, you would fetch suggestions based on the query from an API or local database
+    // For demonstration purposes, I'll return some dummy suggestions
+    List<String> dummySuggestions = ['Suggestion 1', 'Suggestion 2', 'Suggestion 3'];
+    return dummySuggestions
+        .where((element) => element.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+
+
   @override
   void initState() {
     // getpopularitems();
@@ -135,7 +152,7 @@ class _HomeViewState extends State<HomeView> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height/4.3,
+            toolbarHeight: MediaQuery.of(context).size.height/4,
             automaticallyImplyLeading: false,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -235,14 +252,21 @@ class _HomeViewState extends State<HomeView> {
                               child: SizedBox(
                                   // height: 40,
                                   width: MediaQuery.of(context).size.width / 2.9,
-                                  child: const TextField(
+                                  child: TextField(
+                                    controller: _suggestionController,
+                                    onChanged: (value){
+                                      setState(() {
+                                        suggestions = getSuggestions(value);
+                                      });
+                                    },
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'Location',
                                         contentPadding: EdgeInsets.all(10),
-                                        suffixIcon: Icon(
-                                          Icons.arrow_drop_down,
-                                          color: Colors.black,
+                                        suffixIcon: SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: Image(image: AssetImage('assets/icons/locationmarker.png'),),
                                         ),
                                         hintStyle: TextStyle(
                                             fontSize: 12,
@@ -253,23 +277,18 @@ class _HomeViewState extends State<HomeView> {
                             const SizedBox(
                               width: 10.0,
                             ),
-                            const Expanded(
-                              child: TextField(
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                    hintText: 'Search Now',
-                                    border: InputBorder.none,
-                                    hintStyle: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color:
-                                        Color.fromRGBO(255, 255, 255, 0.66)),
-                                    suffixIcon: Icon(
-                                      Icons.search_sharp,
-                                      color: Colors.white,
-                                    )),
+                             Expanded(
+                              child: InkWell(
+                                onTap: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage(location:_suggestionController.text ,)));
+                                },
+                                child: Container(
+                                  child: Text('Search Now....',style: TextStyle(
+                                    color: AppColors.color2
+                                  ),),
+                                )
                               ),
-                            ),
+                                                         ),
                           ],
                         ),
                       ),
@@ -284,106 +303,6 @@ class _HomeViewState extends State<HomeView> {
                       dividerHeight: 0,
                       indicatorPadding: EdgeInsets.zero,
                     ),
-
-                    // const Padding(
-                    //   padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    //   child: SingleChildScrollView(
-                    //     scrollDirection: Axis.horizontal,
-                    //     child: Row(children: [
-                    //       SizedBox(
-                    //           width: 100,
-                    //           child: Column(
-                    //             children: [
-                    //               Image(
-                    //                 image: AssetImage('assets/icons/car.png'),
-                    //                 height: 24,
-                    //                 width: 24,
-                    //               ),
-                    //               Text(
-                    //                 'Vehicles',
-                    //                 style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.white),
-                    //               )
-                    //             ],
-                    //           )),
-                    //       SizedBox(
-                    //           width: 100,
-                    //           child: Column(
-                    //             children: [
-                    //               Image(
-                    //                 image: AssetImage(
-                    //                     'assets/icons/electronics.png'),
-                    //                 height: 24,
-                    //                 width: 24,
-                    //               ),
-                    //               Text(
-                    //                 'Electronics',
-                    //                 style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.white),
-                    //               )
-                    //             ],
-                    //           )),
-                    //       SizedBox(
-                    //           width: 100,
-                    //           child: Column(
-                    //             children: [
-                    //               Image(
-                    //                 image:
-                    //                 AssetImage('assets/icons/machinary.png'),
-                    //                 height: 24,
-                    //                 width: 24,
-                    //               ),
-                    //               Text(
-                    //                 'Machineries',
-                    //                 style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.white),
-                    //               )
-                    //             ],
-                    //           )),
-                    //       SizedBox(
-                    //           width: 100,
-                    //           child: Column(
-                    //             children: [
-                    //               Image(
-                    //                 image: AssetImage('assets/icons/tools.png'),
-                    //                 height: 24,
-                    //                 width: 24,
-                    //               ),
-                    //               Text(
-                    //                 'Tools',
-                    //                 style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.white),
-                    //               )
-                    //             ],
-                    //           )),
-                    //       SizedBox(
-                    //           width: 100,
-                    //           child: Column(
-                    //             children: [
-                    //               Icon(
-                    //                 Icons.chair,
-                    //                 color: Colors.white,
-                    //               ),
-                    //               Text(
-                    //                 'Furnitures',
-                    //                 style: TextStyle(
-                    //                     fontSize: 12,
-                    //                     fontWeight: FontWeight.w400,
-                    //                     color: Colors.white),
-                    //               )
-                    //             ],
-                    //           )),
-                    //     ]),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
