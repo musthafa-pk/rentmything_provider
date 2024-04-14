@@ -1,13 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:rentmything/res/app_colors.dart';
 
 import 'package:rentmything/res/app_url.dart';
 
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/FuelTypeWIdget.dart';
+import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
@@ -42,6 +47,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
   final FocusNode descriptionNode = FocusNode();
   final FocusNode priceNode = FocusNode();
   final FocusNode locaitonNode = FocusNode();
+
 
 
 
@@ -128,33 +134,10 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       padding: EdgeInsets.all(8.0),
                       child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  image: const DecorationImage(image: AssetImage('assets/images/redcar.jpg'),fit: BoxFit.cover)
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: const Color.fromRGBO(7,59, 76, 0.18)
-                            ),
-                            child: const Center(child: Icon(Icons.add,color: Color.fromRGBO(88, 88, 88, 1),)),
-                          ),
-                        ],
-                      ),),
+                    SizedBox(
+                      height: 100,
+                        // width: MediaQuery.of(context).size.width/1.1,
+                        child: ImagesPicker()),
                     const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     SizedBox(height: 10,),
                     Container(
@@ -218,70 +201,6 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                         selectedFuelType = fuelType;
                       });
                     },),
-                    // SingleChildScrollView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //     children: [
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Petrol')),
-                    //       ),
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Diesel')),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: AppColors.color1,
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Electric',style: TextStyle(color: Colors.white),)),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('CNG')),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Water')),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -324,7 +243,9 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: title,
                         focusNode: titleNode,
-                        validator: (v){},
+                        validator: (v){
+
+                        },
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, titleNode, descriptionNode);
                         },
@@ -474,61 +395,16 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
   }
 }
 
-class FuelType extends StatefulWidget {
-  final Function(String) onFuelTypeSelected;
-  const FuelType({required this.onFuelTypeSelected,Key? key}) : super(key: key);
 
-  @override
-  State<FuelType> createState() => _FuelTypeState();
-}
 
-class _FuelTypeState extends State<FuelType> {
-  int selectedIndex = 0; // Variable to keep track of the selected item index
 
-  @override
-  Widget  build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          buildSegmentedButton('Petrol', 0),
-          SizedBox(width: 10),
-          buildSegmentedButton('Diesel', 1),
-          SizedBox(width: 10),
-          buildSegmentedButton('Electric', 2),
-          SizedBox(width: 10),
-          buildSegmentedButton('CNG', 3),
-          SizedBox(width: 10),
-          buildSegmentedButton('Other', 4),
-        ],
-      ),
-    );
-  }
 
-  Widget buildSegmentedButton(String text, int index) {
-    bool isSelected = selectedIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-          widget.onFuelTypeSelected(text);
-        });
-      },
-      child: Container(
-        width: 115,
-        height: 40,
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.color1 : const Color.fromRGBO(7, 59, 76, 0.18),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(color: isSelected ? Colors.white : null),
-          ),
-        ),
-      ),
-    );
-  }
-}
+
+
+
+
+
+
+
+
+

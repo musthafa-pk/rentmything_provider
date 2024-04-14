@@ -109,8 +109,13 @@ class _ProfileViewState extends State<ProfileView> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text("Info"),
-                                        content: Text("Scan qr code to get user id"),
+                                        title: Row(
+                                          children: [
+                                            Icon(Icons.info,color: AppColors.color1,),
+                                            Text("Info"),
+                                          ],
+                                        ),
+                                        content: Text("Show this code to add rent data!"),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
