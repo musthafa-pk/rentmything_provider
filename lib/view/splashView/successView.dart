@@ -16,10 +16,11 @@ class _SuccessViewState extends State<SuccessView> {
     // TODO: implement initState
     // Add a delay before navigating to the home page
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavigationPage()),
-      );
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => BottomNavigationPage(),), (route) => false);
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const BottomNavigationPage()),
+      // );
     });
     super.initState();
   }
@@ -89,7 +90,7 @@ class MyButton extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Center(child: Text(title,style: TextStyle(color: textColor,fontWeight: FontWeight.w500,fontSize: 16),)),
+          child: Center(child: Text(title,style: TextStyle(color: textColor,fontFamily: 'Poppins',fontWeight: FontWeight.w500,fontSize: 16),)),
         ),
       ),
     );

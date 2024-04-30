@@ -17,6 +17,40 @@ class RentedItems extends StatefulWidget {
 
 class _RentedItemsState extends State<RentedItems> {
   List<dynamic> rentedData = [];
+  List<dynamic> customerData = [];
+  Future<void> fetchUserData(String userid) async {
+    print('cus id:$userid');
+    final url = Uri.parse(AppUrl.userDetails);
+    final requestBody = {
+      "id":userid
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode(requestBody),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        print('drivergot');
+        print('driver data');
+        final dynamic responseData = jsonDecode(response.body);
+        print(responseData['data']);
+        setState(() {
+         customerData.clear();
+         customerData.add(responseData['data']);
+         print('csdata:${customerData}');
+        });
+      } else {
+        print('HTTP request failed with status code: ${response.statusCode}');
+        // Handle error - Update UI to indicate an error
+      }
+    } catch (error) {
+      print('Error during HTTP request: $error');
+      // Handle error - Update UI to indicate an error
+    }
+  }
 
   @override
   void initState() {
@@ -96,6 +130,23 @@ class _RentedItemsState extends State<RentedItems> {
       child: ListView.builder(
         itemCount: rentedData.length,
         itemBuilder: (context, index) {
+          Map<String, dynamic> rentedItem =
+          rentedData[index];
+          DateTime startDate =
+          DateTime.parse(rentedItem['start_date']);
+          DateTime endDate =
+          DateTime.parse(rentedItem['end_date']);
+          DateTime now = DateTime.now();
+          double progress = now.isBefore(endDate)
+              ? now
+              .difference(startDate)
+              .inDays
+              .toDouble() /
+              endDate
+                  .difference(startDate)
+                  .inDays
+                  .toDouble()
+              : 1.0;
           return Padding(
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top: 2, bottom: 2),
@@ -128,15 +179,19 @@ class _RentedItemsState extends State<RentedItems> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
-                              child: Container(
+                              child:Container(
                                 height: 80,
                                 width: 80,
                                 decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: const DecorationImage(
-                                        image: AssetImage('assets/images/van.jpg'),
-                                        fit: BoxFit.cover)),
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      rentedData[index]['image'] != null && rentedData[index]['image'].isNotEmpty ? rentedData[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -232,7 +287,11 @@ class _RentedItemsState extends State<RentedItems> {
                                         SizedBox(
                                           width: 80,
                                           child: Flexible(
-                                            child: Text('10 Month Agreement',
+                                            child: endDate.difference(startDate).inDays == 0 ? Text('1 Days agreement',style: TextStyle(
+                                                fontSize: 8,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.red),)
+                                                :Text('${endDate.difference(startDate).inDays}Days Agreement',
                                                 style: TextStyle(
                                                     fontSize: 8,
                                                     fontWeight: FontWeight.w400,
@@ -259,17 +318,135 @@ class _RentedItemsState extends State<RentedItems> {
                                         )
                                       ],
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 10.0, bottom: 10.0),
-                                      child: LinearProgressIndicator(
-                                        value: 0.5,
-                                        backgroundColor:
-                                        Color.fromRGBO(217, 217, 217, 1),
-                                        color: Color.fromRGBO(25, 178, 0, 1),
-                                        minHeight: 8.0,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
+                                    InkWell(
+                                      onTap: ()async{
+                                        fetchUserData(rentedData[index]['customer_id']);
+                                        await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Rent Details'),
+                                              content: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Center(
+                                                    child: Container(
+                                                      child: Column(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              // Show the larger image here
+                                                              showDialog(
+                                                                context: context,
+                                                                builder: (BuildContext context) {
+                                                                  return AlertDialog(
+                                                                    content: SizedBox(
+                                                                      width: 300, // Adjust the width as needed
+                                                                      height: 300, // Adjust the height as needed
+                                                                      child: Image.network('${customerData[0]['image']}'),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              );
+                                                            },
+                                                            child: CircleAvatar(
+                                                              radius: 35,
+                                                              backgroundImage: NetworkImage('${customerData[0]['image']}'),
+                                                            ),
+                                                          ),
+
+                                                          Text('${customerData[0]['name']}'),
+                                                          InkWell(
+                                                            onTap: (){
+                                                              Util.makingPhonecall(context, '${customerData[0]['phone_number']}');
+                                                            },
+                                                              child: Icon(Icons.phone)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 20,),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('End Date:'),
+                                                      Text('${startDate.toString()}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('End Date:'),
+                                                      Text('${endDate.toString()}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('Rented Price:'),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors.color1,
+                                                          borderRadius: BorderRadius.circular(10)
+                                                        ),
+                                                          child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Text('${rentedData[index]['amount']}',style: TextStyle(
+                                                          color: Colors.white
+                                                        ),),
+                                                      )),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('Time Left:'),
+                                                      Text('${rentedData[index]['time_left']}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('Rent Status:'),
+                                                      Text('${rentedData[index]['rent_status']}'),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text('Rent Type:'),
+                                                      Text('${rentedData[index]['rent_type']}'),
+                                                    ],
+                                                  ),
+
+                                                  // Add more rent details as needed
+                                                ],
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Close'),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10.0, bottom: 10.0),
+                                        child: LinearProgressIndicator(
+                                          value: progress,
+                                          backgroundColor:
+                                          Color.fromRGBO(217, 217, 217, 1),
+                                          color: Color.fromRGBO(25, 178, 0, 1),
+                                          minHeight: 8.0,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                        ),
                                       ),
                                     ),
                                   ]),

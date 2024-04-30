@@ -1,35 +1,26 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rentmything/res/app_colors.dart';
-
 import 'package:rentmything/res/app_url.dart';
-
-
-import 'package:http/http.dart' as http;
-import 'package:rentmything/res/components/FuelTypeWIdget.dart';
 import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/utils/utls.dart';
+import 'package:http/http.dart' as http;
 import 'package:rentmything/view/splashView/successView.dart';
 
-class RentOutVehicle extends StatefulWidget {
+class RentOutLandBuilding extends StatefulWidget {
   String category;
   String subcategory;
-  RentOutVehicle({required this.category,required this.subcategory,super.key});
+  RentOutLandBuilding({required this.category,required this.subcategory,super.key});
 
   @override
-  State<RentOutVehicle> createState() => _RentOutVehicleState();
+  State<RentOutLandBuilding> createState() => _RentOutLandBuildingState();
 }
 
-class _RentOutVehicleState extends State<RentOutVehicle> {
+class _RentOutLandBuildingState extends State<RentOutLandBuilding> {
 
   final GlobalKey<FormState> _vehicleformKey = GlobalKey<FormState>();
-  String? image;
   final TextEditingController brand = TextEditingController();
   final TextEditingController year = TextEditingController();
   String? selectedFuelType;
@@ -48,19 +39,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
   final FocusNode priceNode = FocusNode();
   final FocusNode locaitonNode = FocusNode();
 
-  bool _isLoading = false;
-
-  void _toggleLoading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
-
-
-  // product adding api calling function
   Future<void> addProduct() async {
-    _toggleLoading();
-    // List<File> imageFiles = _imageFiles;
 
     // Prepare the data to be sent in the request body
     Map<String, dynamic> data = {
@@ -85,8 +64,8 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
     // Encode the data into JSON format
     String jsonEncodedData = json.encode(data);
 
+
     var request = http.MultipartRequest('POST',Uri.parse(AppUrl.addProduct));
-    print('images:${Util.imageFiles}');
     for(var file in Util.imageFiles){
       request.files.add(await http.MultipartFile.fromPath('image',file.path));
       print('test:');
@@ -96,17 +75,17 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
       request.fields[key] = value.toString();
     });
 
+
     try {
-      final response = await request.send();
       // Make the POST request
-      // http.Response responses = await http.post(
+      // http.Response response = await http.post(
       //   Uri.parse(AppUrl.addProduct),
       //   headers: <String, String>{
       //     'Content-Type': 'application/json; charset=UTF-8',
       //   },
       //   body: jsonEncodedData,
       // );
-
+      final response = await request.send();
 
       // Check if the request was successful (status code 200)
       if (response.statusCode == 200) {
@@ -114,34 +93,26 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
         Util.flushBarErrorMessage('Product added successfully', Icons.verified, Colors.green, context);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const SuccessView()));
         // Parse the response JSON
-        // Map<String, dynamic> responseData = json.decode(responses.body);
+        // Map<String, dynamic> responseData = json.decode(response.body);
 
         // Do something with the response data
         // print('Response: $responseData');
       } else {
         // If the request was not successful, print the error status code and message
         print('Error: ${response.statusCode}');
-        // print('Error Message: ${responses.body}');
+        // print('Error Message: ${response.body}');
       }
     } catch (e) {
       // Catch any errors that occur during the request
       print('Error: $e');
-    }finally{
-      _toggleLoading();
     }
-  }
-  @override
-  void initState() {
-    Util.imageFiles.clear();
-    // TODO: implement initState
-    super.initState();
   }
 
   @override
-  void dispose() {
+  void initState() {
+    // TODO: implement initState
     Util.imageFiles.clear();
-    // TODO: implement dispose
-    super.dispose();
+    super.initState();
   }
 
   @override
@@ -155,7 +126,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
             child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
         title: Text('${widget.subcategory} Details',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
       ),
-      body: SafeArea(
+      body:SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -171,10 +142,10 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     SizedBox(
-                      height: 100,
+                        height: 100,
                         // width: MediaQuery.of(context).size.width/1.1,
                         child: ImagesPicker()),
-                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                    const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     SizedBox(height: 10,),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -182,7 +153,6 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           color: const Color.fromRGBO(7, 59,76,0.18),
                           borderRadius: BorderRadius.circular(5)
                       ),
-
                       child: TextFormField(
                         controller: brand,
                         focusNode: brandNode,
@@ -195,7 +165,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the brand';
+                            return 'Please enter the ad title';
                           }
                           return null;
                         },
@@ -204,7 +174,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Year',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Construction Year',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -214,7 +184,6 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       ),
                       child: TextFormField(
                         controller: year,
-                        keyboardType: TextInputType.number,
                         focusNode: yearNode,
                         validator: (v){
                           Util.fieldFocusChange(context, yearNode,km_drivernNode);
@@ -223,25 +192,44 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, yearNode, km_drivernNode);
                         },
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 10)
                         ),
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text('Fuel Type'),
-                    ),
-                    FuelType(onFuelTypeSelected: (fuelType){
-                      setState(() {
-                        selectedFuelType = fuelType;
-                      });
-                    },),
+
+                    // Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: const Text('Lease Duration',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                    // ),
+                    // Container(
+                    //   width: MediaQuery.of(context).size.width/1.1,
+                    //   decoration: BoxDecoration(
+                    //       color: const Color.fromRGBO(7, 59,76,0.18),
+                    //       borderRadius: BorderRadius.circular(5)
+                    //   ),
+                    //   child: TextFormField(
+                    //     controller: km_driven,
+                    //     focusNode: km_drivernNode,
+                    //     validator: (v){
+                    //       if(v == null || v.isEmpty){
+                    //         return 'Please enter the year of use';
+                    //       }
+                    //     },
+                    //     onFieldSubmitted: (v){
+                    //       Util.fieldFocusChange(context, km_drivernNode, titleNode);
+                    //     },
+                    //     decoration: const InputDecoration(
+                    //         border: InputBorder.none,
+                    //         contentPadding: EdgeInsets.only(left: 10)
+                    //     ),
+                    //   ),
+                    // ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Km Driven',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Property Size',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -252,44 +240,17 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: km_driven,
                         focusNode: km_drivernNode,
-                        keyboardType: TextInputType.number,
                         validator: (v){
                           if(v == null || v.isEmpty){
-                            return 'Please enter the kilometer driven';
+                            return 'Please enter the km driven of use';
                           }
                         },
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, km_drivernNode, titleNode);
                         },
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width/1.1,
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(7, 59,76,0.18),
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      child: TextFormField(
-                        controller: title,
-                        focusNode: titleNode,
-                        validator: (v){
-
-                        },
-                        onFieldSubmitted: (v){
-                          Util.fieldFocusChange(context, titleNode, descriptionNode);
-                        },
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 10)
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 10)
                         ),
                       ),
                     ),
@@ -314,7 +275,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           Util.fieldFocusChange(context, descriptionNode, priceNode);
                         },
                         decoration    : const InputDecoration(
-                            border: InputBorder.none,
+                          border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 10),
                         ),
                       ),
@@ -335,7 +296,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                                     color: AppColors.color1,
                                     borderRadius: BorderRadius.circular(6)
                                 ),
-                                child: CustomDropdown(options: const ['Daily','Monthly','Hourly'],
+                                child: CustomDropdown(options: const ['Daily','Monthly','Hourly','Yearly'],
                                   onChanged: (value) {
                                     setState(() {
                                       timePeriod = value.toString();
@@ -365,7 +326,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                                     },
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(left: 10)
+                                        contentPadding: EdgeInsets.only(left: 10)
                                     ),
                                   ),
                                 ),
@@ -399,7 +360,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                           };
                         },
                         decoration: const InputDecoration(
-                            border: InputBorder.none,
+                          border: InputBorder.none,
                           contentPadding: EdgeInsets.only(left: 10),
                         ),
                       ),
@@ -419,9 +380,11 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                               }else{
                                 return Util.flushBarErrorMessage('Please check all fields', Icons.sms_failed, Colors.red, context);
                               }
-                        })),
+                            })),
 
                     const SizedBox(height: 10.0,),
+
+
                   ]),
             ),
           ),

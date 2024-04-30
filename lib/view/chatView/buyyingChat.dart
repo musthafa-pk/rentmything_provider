@@ -12,8 +12,9 @@ class BuyyingChat extends StatefulWidget {
   final String senderId;
   final String reciverId;
   final String customerName;
+  final String productId;
 
-  BuyyingChat({required this.customerName,required this.senderId, required this.reciverId, Key? key}) : super(key: key);
+  BuyyingChat({required this.productId,required this.customerName,required this.senderId, required this.reciverId, Key? key}) : super(key: key);
 
   @override
   State<BuyyingChat> createState() => _BuyyingChatState();
@@ -25,6 +26,43 @@ class _BuyyingChatState extends State<BuyyingChat> {
   List<dynamic> messages = [];
   late Timer _timer;
   late ScrollController _scrollController;
+  Map<String,dynamic> productDetails = {};
+
+  Future<dynamic> getproductDetails() async {
+    String url = AppUrl.getProductDetials;
+    Map<String, dynamic> postData ={
+      'productId':widget.productId,
+      'user_id':Util.userId
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(postData),
+      );
+
+      if (response.statusCode == 200) {
+        print('p details:${response.body}');
+        var responseData = jsonDecode(response.body);
+        setState(() {
+          productDetails.clear();
+          productDetails.addAll(responseData['data']);
+        });
+        print('productDetails :$productDetails');
+        return responseData;
+      } else {
+        var responseData = jsonDecode(response.body);
+        print("API request failed with status code: ${response.statusCode}");
+        print(responseData);
+
+      }
+    } catch (e) {
+      print("Error making POST request: $e");
+      return null;
+    }
+  }
 
   Future<void> sendMessage() async {
     String url = AppUrl.sendmessage;
@@ -32,7 +70,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
       "message": _messageController.text,
       "receiver_id": widget.reciverId,
       "sender_id": Util.userId,
-      "created_by":Util.userId,
+      "prod_id":widget.productId,
     };
     String jsonBody = json.encode(body);
 
@@ -53,6 +91,9 @@ class _BuyyingChatState extends State<BuyyingChat> {
       throw error;
     }
   }
+
+
+
 
   void getChat() async {
     String url = AppUrl.getsinglechat;
@@ -92,6 +133,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    getproductDetails();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       getChat();
     });
@@ -139,7 +181,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${widget.customerName}',style: TextStyle(fontSize: 18),),
+                  // Text('${widget.customerName}',style: TextStyle(fontSize: 18),),
                   Text('online',style: TextStyle(fontSize: 12,color: Colors.green),)
                 ],
               ),
@@ -160,109 +202,112 @@ class _BuyyingChatState extends State<BuyyingChat> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/van.jpg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   height: 80,
+                    //   width: 80,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.black,
+                    //     borderRadius: BorderRadius.circular(15),
+                    //     image: DecorationImage(
+                    //       image: NetworkImage(
+                    //         productDetails['image'] != null && productDetails['image'].isNotEmpty ? productDetails['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                    //       ),
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //   ),
+                    // ),
                     // const SizedBox(width: 20),
-                    const Column(
+                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Van Fresh 2024',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Posted On : 1-3-2024',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
+                      // children: [
+                      //   Padding(
+                      //     padding: EdgeInsets.all(8.0),
+                      //     child: Text(
+                      //       '${productDetails['name']}',
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: 16,
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   Padding(
+                      //     padding: EdgeInsets.all(8.0),
+                      //     child: Text(
+                      //       'Posted On :${Util.formatDateTime(productDetails['created_by']['createdAt'])}',
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.w400,
+                      //         fontSize: 12,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ],
                     ),
                   ],
                 ),
               ),
             ),
-            Expanded(
-              child: StreamBuilder<List<dynamic>>(
-                stream: _messageStreamController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemCount: snapshot.data?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        bool isSentByMe = snapshot.data?[index]['sender_id'] == Util.userId;
-                        print(isSentByMe);
-                        return buildMessage(
-                            isSentByMe: isSentByMe,
-                            message: '${snapshot.data?[index]['message']}',
-                          senderName: '${snapshot.data?[index]['receiver_id']['name']}'
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.color2,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: TextFormField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 10),
-                            hintText: 'Type your message...',
-                            border: InputBorder.none,
-
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        sendMessage();
-                        _messageController.clear();
-                        getChat();
-                      });
-                    },
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
-            ),
+            // Expanded(
+            //   child: StreamBuilder<List<dynamic>>(
+            //     stream: _messageStreamController.stream,
+            //     builder: (context, snapshot) {
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return Center(child: CircularProgressIndicator());
+            //       } else if (snapshot.hasError) {
+            //         return Center(child: Text('Error: ${snapshot.error}'));
+            //       } else {
+            //         return ListView.builder(
+            //           controller: _scrollController,
+            //           itemCount: snapshot.data?.length ?? 0,
+            //           itemBuilder: (context, index) {
+            //             // bool isSentByMe = snapshot.data?[index]['sender_id'] == Util.userId;
+            //             // print(isSentByMe);
+            //             return buildMessage(
+            //                 isSentByMe: snapshot.data?[index]['sender_id'] == Util.userId ? true : false,
+            //                 message: '${snapshot.data?[index]['message']}',
+            //               senderName: '${snapshot.data?[index]['sender_id']['name']}'
+            //             );
+            //           },
+            //         );
+            //       }
+            //     },
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //     children: [
+            //       Expanded(
+            //         child: Container(
+            //           decoration: BoxDecoration(
+            //             color: AppColors.color2,
+            //             borderRadius: BorderRadius.circular(15),
+            //           ),
+            //           child: TextFormField(
+            //             controller: _messageController,
+            //             decoration: const InputDecoration(
+            //                 contentPadding: EdgeInsets.only(left: 10),
+            //                 hintText: 'Type your message...',
+            //                 border: InputBorder.none,
+            //
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //       IconButton(
+            //         onPressed: () {
+            //           setState(() {
+            //             sendMessage();
+            //             _messageController.clear();
+            //             getChat();
+            //           });
+            //         },
+            //         icon: const Icon(Icons.send),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

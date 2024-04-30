@@ -10,4 +10,9 @@ class RoutesName{
 
   static const String signUp ='signUp screen';
 
+  static const String bottomNav = 'bottom NavigationBar page';
+
+  static const String chatList = 'chat list page';
+
+
 }

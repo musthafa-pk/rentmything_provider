@@ -40,10 +40,10 @@ class _NotificationPageState extends State<NotificationPage> {
         print('get notifications');
         var responseData = jsonDecode(response.body)['data'];
         print(responseData);
-        setState(() {
+        // setState(() {
         notificaitonlist.clear();
         notificaitonlist.addAll(responseData);
-        });
+        // });
         print('notifications list is:$notificaitonlist');
         print('notificaiton data :$notificaitonlist');
         print('Response: $responseData');
@@ -178,90 +178,88 @@ class _NotificationPageState extends State<NotificationPage> {
           child: const Icon(Icons.arrow_circle_left_rounded, color: AppColors.color1),
         ),
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: getnotification,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: FutureBuilder(
-                    future: getnotification(),
-                    builder: (context,index) {
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: notificaitonlist.length,
-                          itemBuilder: (context,index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                onTap: (){
-                                  setState(() {
-                                    readnotifcation(notificaitonlist[index]['_id']);
-                                    _showNotificationPopup(
-                                        '${notificaitonlist[index]['message']}'
-                                    );
-                                  });
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width/1.1,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue.shade50,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(child: Text('${notificaitonlist[index]['message']}',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,)),
-                                            Row(
-                                              children: [
-                                                InkWell(
-                                                    onTap:(){
-                                                      deletenotification(notificaitonlist[index]['_id']);
-                                                    },
-                                                    child: Icon(Icons.delete, color: Colors.red,size: 18,)),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              Text('${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(notificaitonlist[index]['createdAt']))}'),
-                                              SizedBox(width: 10,),
-                                              notificaitonlist[index]['read'] == 'N' ? Icon(Icons.mark_chat_unread,
-                                                color:Colors.green,size: 18,) : Icon(Icons.mark_chat_read_outlined,
-                                                color:Colors.green,size: 18,)
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+      body: RefreshIndicator(
+        onRefresh: getnotification,
+        child: FutureBuilder(
+          future: getnotification(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return ListView.builder(
+                itemCount: notificaitonlist.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+
+                          readnotifcation(notificaitonlist[index]['_id']);
+                          _showNotificationPopup(
+                              '${notificaitonlist[index]['message']}'
+                          );
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.1,
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${notificaitonlist[index]['message']}',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
                                   ),
+                                  Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            deletenotification(notificaitonlist[index]['_id']);
+                                          });
+                                        },
+                                        child: Icon(Icons.delete, color: Colors.red, size: 18),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(notificaitonlist[index]['createdAt']))}'),
+                                    SizedBox(width: 10),
+                                    notificaitonlist[index]['read'] == 'N' ? Icon(Icons.mark_chat_unread, color: Colors.green, size: 18) : Icon(Icons.mark_chat_read_outlined, color: Colors.green, size: 18),
+                                  ],
                                 ),
                               ),
-                            );
-                          }
-                      );
-                    }
-                  )
-                ),
-              ),
-            ],
-          ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
         ),
       ),
     );
   }
+
 }

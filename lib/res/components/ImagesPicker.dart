@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rentmything/utils/utls.dart';
 
 class ImagesPicker extends StatefulWidget {
   const ImagesPicker({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class ImagesPicker extends StatefulWidget {
 }
 
 class _ImagesPickerState extends State<ImagesPicker> {
-  List<File> _imageFiles = [];
+  // List<File> _imageFiles = [];
 
   Future<void> _pickImages() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -23,7 +24,7 @@ class _ImagesPickerState extends State<ImagesPicker> {
     if (result != null) {
       List<String> selectedFileNames = result.files.map((file) => file.name).toList();
       // Check if any selected file name is already present in _imageFiles
-      bool hasDuplicate = selectedFileNames.any((fileName) => _imageFiles.any((file) => file.path.split('/').last == fileName));
+      bool hasDuplicate = selectedFileNames.any((fileName) => Util.imageFiles.any((file) => file.path.split('/').last == fileName));
       if (hasDuplicate) {
         Fluttertoast.showToast(
           msg: 'File with the same name already selected.',
@@ -36,7 +37,7 @@ class _ImagesPickerState extends State<ImagesPicker> {
         );
       } else {
         setState(() {
-          _imageFiles.addAll(result.paths.map((path) => File(path!)).toList());
+          Util.imageFiles.addAll(result.paths.map((path) => File(path!)).toList());
         });
       }
     }
@@ -46,7 +47,7 @@ class _ImagesPickerState extends State<ImagesPicker> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _imageFiles.length <= 5
+        Util.imageFiles.length < 5
             ? InkWell(
           onTap: _pickImages,
           child: Container(
@@ -64,14 +65,14 @@ class _ImagesPickerState extends State<ImagesPicker> {
         Expanded(
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: _imageFiles.length,
+            itemCount: Util.imageFiles.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Stack(
                   children: [
                     Image.file(
-                      _imageFiles[index],
+                      Util.imageFiles[index],
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
@@ -83,7 +84,7 @@ class _ImagesPickerState extends State<ImagesPicker> {
                         icon: Icon(Icons.remove_circle),
                         onPressed: () {
                           setState(() {
-                            _imageFiles.removeAt(index);
+                            Util.imageFiles.removeAt(index);
                           });
                         },
                       ),

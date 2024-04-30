@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:rentmything/main.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/rentOutButton.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
-import 'package:rentmything/view/rentoutView/rentOut1.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,7 +27,6 @@ class _PopularViewState extends State<PopularView> {
   final List<String> images = [
     'assets/images/50offimage.jpg',
     'assets/images/lmtoff.jpg',
-    // 'assets/images/van.jpg',
     'assets/images/25off.jpg'
   ];
   final List<String> urls = [
@@ -161,53 +159,8 @@ class _PopularViewState extends State<PopularView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const RentOut1(),
-            ),
-          );
-        },
-        child: Container(
-          width: 120,
-          decoration: BoxDecoration(
-            color: AppColors.color1,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
-                Text(
-                  'Rent Out',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 10.0),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(50)
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    color: AppColors.color1,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: RentOutButton(),
       body:
       isLoading ? _buildShimmerEffect() :
       RefreshIndicator(
@@ -279,6 +232,7 @@ class _PopularViewState extends State<PopularView> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
+                        color: AppColors.color1
                       ),
                     ),
                   ),
@@ -350,6 +304,7 @@ class _PopularViewState extends State<PopularView> {
                                             style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 12,
+                                              color: AppColors.color1
                                             ),
                                           ),
                                         ),
@@ -359,16 +314,18 @@ class _PopularViewState extends State<PopularView> {
                                             SizedBox(
                                               width: 80,
                                               child: Flexible(
-                                                child: Text(
-                                                  '#total rent period',
-                                                  style: TextStyle(
+                                                child: endDate.difference(startDate).inDays == 0 ? Text('1 Days agreement',style: TextStyle(
                                                     fontSize: 8,
                                                     fontWeight: FontWeight.w400,
-                                                    color: Colors.red,
-                                                  ),
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
+                                                    color: Colors.red),)
+                                                    :Text('${endDate.difference(startDate).inDays}Days Agreement',
+                                                    style: TextStyle(
+                                                        fontSize: 8,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Colors.red),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                    TextOverflow.ellipsis),
                                               ),
                                             ),
                                             SizedBox(
@@ -429,7 +386,7 @@ class _PopularViewState extends State<PopularView> {
                 padding: EdgeInsets.only(left: 20, top: 10, bottom: 10.0),
                 child: Text(
                   'Popular',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16,color: AppColors.color1),
                 ),
               ),
               _buildPopularProductsList(),
@@ -483,6 +440,7 @@ class _PopularViewState extends State<PopularView> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductDetails(
+                              iswishlist: '${popularProducts[index]['wishlist']}',
                               productId: '${popularProducts[index]['_id']}',
                               createdUserId: '${popularProducts[index]['created_by']}',
                             )));
@@ -508,14 +466,17 @@ class _PopularViewState extends State<PopularView> {
                                   height: 80,
                                   width: 80,
                                   decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius:
-                                      BorderRadius.circular(15),
-                                      image: const DecorationImage(
-                                          image: AssetImage(
-                                              'assets/images/van.jpg'),
-                                          fit: BoxFit.cover)),
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        popularProducts[index]['image'] != null && popularProducts[index]['image'].isNotEmpty ? popularProducts[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
+
                               ),
                               const SizedBox(
                                 width: 20.0,
@@ -534,6 +495,7 @@ class _PopularViewState extends State<PopularView> {
                                               fontSize: 16,
                                               fontWeight:
                                               FontWeight.w500,
+                                              color: AppColors.color1,
                                               letterSpacing: 1),
                                         ),
                                         const SizedBox(
@@ -653,8 +615,4 @@ class _PopularViewState extends State<PopularView> {
             });
   }
 }
-
-
-
-
 

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/authView/otp_screen.dart';
 
@@ -34,28 +39,46 @@ class _SignUpState extends State<SignUp> {
   bool _isObscurePassword = true;
   bool _isObscureConfirmPassword = true;
 
+  File? _image;
+
   //signup api function
   Future<dynamic> signUpApi() async {
+    if(_image == null){
+      Util.flushBarErrorMessage('Please pick image', Icons.sms_failed, Colors.red, context);
+      return;
+    }
     String url = AppUrl.userAdd;
-    Map<String, dynamic> postData = {
-      "name": fullName.text,
-      "password": password.text,
-      "email": email.text,
-      "phone_number": phoneNumber.text,
-    };
+    var request = http.MultipartRequest('POST',Uri.parse(url));
+    request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
+
+    request.fields['name'] = fullName.text;
+    request.fields['password'] = password.text;
+    request.fields['email'] = email.text;
+    request.fields['phone_number'] = phoneNumber.text;
+
+
+    // Map<String, dynamic> postData = {
+    //   "name": fullName.text,
+    //   "password": password.text,
+    //   "email": email.text,
+    //   "phone_number": phoneNumber.text,
+    // };
     try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(postData),
-      );
-      print(jsonEncode(postData));
+      // final response = await http.post(
+      //   Uri.parse(url),
+      //   headers: <String, String>{
+      //     'Content-Type': 'application/json; charset=UTF-8',
+      //   },
+      //   body: jsonEncode(postData),
+      // );
+      final response = await request.send();
+      print(response.statusCode);
+      // print(object)
+      // print(jsonEncode(postData));
       if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
+        // var responseData = jsonDecode(response.body);
         print('API request successful');
-        print(responseData);
+        // print(responseData);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -64,32 +87,51 @@ class _SignUpState extends State<SignUp> {
                 )));
         Util.flushBarErrorMessage(
             'User Registered successfully !', Icons.verified, Colors.green, context);
-        return responseData;
+        // return responseData;
       } else {
-        var responseData = jsonDecode(response.body);
-        print(responseData);
-        Util.snackBar('Some error occured,${responseData['error']}', context);
+        print('erru');
+        // var responseData = jsonDecode(response.body);
+        // print(responseData);
+        final responseBody = await response.stream.bytesToString();
+        print('resp:$responseBody');
+        final errorResponse = jsonDecode(responseBody);
+        print('API request failed with status code: ${response.statusCode}');
+        print('Error message: ${errorResponse['message']}');
+        Util.flushBarErrorMessage('${errorResponse['message']}', Icons.warning, Colors.red, context);
+        // Util.flushBarErrorMessage('Some error occured,${errorResponse['message']}', context);
         print('else worked...');
-        print(response);
         print("API request failed with status code: ${response.statusCode}");
         return null;
       }
     } catch (e) {
+      print('eee');
+      Util.flushBarErrorMessage('${e.toString()}', Icons.warning, Colors.red, context);
       print("Error making POST request: $e");
       return null;
     }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  bool isNumeric(String str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_circle_left_rounded, color: AppColors.color1),
-        ),
+        leading: AppBarBackButton(),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -103,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                   padding: EdgeInsets.only(left: 15.0),
                   child: Text(
                     'Sign Up',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 27, letterSpacing: 1),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 27, letterSpacing: 1,color: AppColors.color1),
                   ),
                 ),
                 Row(
@@ -111,17 +153,12 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     Stack(
                       children: [
-                        const CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Color.fromRGBO(220, 228, 230, 1),
-                        ),
+                        _buildCircleAvatar(),
                         Positioned(
                           right: 0,
                           bottom: 0,
                           child: InkWell(
-                            onTap: (){
-                              Util.toastMessage('This feuture not available now');
-                            },
+                            onTap:_pickImage,
                             child: Container(
                               decoration: BoxDecoration(
                                 color: AppColors.color1,
@@ -146,7 +183,7 @@ class _SignUpState extends State<SignUp> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Full Name'),
+                      const Text('Full Name',style: TextStyle(color:AppColors.color1),),
                       const SizedBox(height: 10,),
                       Container(
                         decoration: BoxDecoration(
@@ -157,8 +194,10 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
+                            counterText: ''
                           ),
                           controller: fullName,
+                          maxLength: 35,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your full name';
@@ -166,12 +205,13 @@ class _SignUpState extends State<SignUp> {
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            Util.fieldFocusChange(context, fullNameNode, phoneNumberNode);
+                              Util.fieldFocusChange(context, fullNameNode, phoneNumberNode);
                           },
                         ),
                       ),
+
                       const SizedBox(height: 10,),
-                      const Text('Phone Number'),
+                      const Text('Phone Number',style: TextStyle(color:AppColors.color1)),
                       const SizedBox(height: 10,),
                       Container(
                         decoration: BoxDecoration(
@@ -181,7 +221,10 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           controller: phoneNumber,
                           focusNode: phoneNumberNode,
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
                           decoration: const InputDecoration(
+                            counterText: '',
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
                           ),
@@ -189,15 +232,23 @@ class _SignUpState extends State<SignUp> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your phone number';
                             }
+                            if (!isNumeric(value)) {
+                              return 'Please enter a valid phone number';
+                            }
+                            if(value.contains('.')){
+                              return 'Please enter a valid phone number';
+                            }
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            Util.fieldFocusChange(context, phoneNumberNode, emailNode);
-                          },
+                              Util.fieldFocusChange(context, phoneNumberNode, emailNode);
+                            }
                         ),
                       ),
+
+
                       const SizedBox(height: 10,),
-                      const Text('Email'),
+                      const Text('Email',style: TextStyle(color:AppColors.color1)),
                       const SizedBox(height: 10,),
                       Container(
                         width: MediaQuery.of(context).size.width / 1.1,
@@ -211,7 +262,9 @@ class _SignUpState extends State<SignUp> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
+                            counterText: '',
                           ),
+                          maxLength: 35,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your email';
@@ -221,12 +274,13 @@ class _SignUpState extends State<SignUp> {
                             return null;
                           },
                           onFieldSubmitted: (value) {
-                            Util.fieldFocusChange(context, emailNode, passwordNode);
+                              Util.fieldFocusChange(context, emailNode, passwordNode);
                           },
                         ),
                       ),
+
                       const SizedBox(height: 10,),
-                      const Text('Password'),
+                      const Text('Password',style: TextStyle(color:AppColors.color1)),
                       const SizedBox(height: 10,),
                       Container(
                         width: MediaQuery.of(context).size.width / 1.1,
@@ -240,6 +294,7 @@ class _SignUpState extends State<SignUp> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.only(left: 10,top: 10),
+                            counterText: '',
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -253,6 +308,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           obscureText: _isObscurePassword,
+                          maxLength: 15,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your password';
@@ -267,7 +323,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       const SizedBox(height: 10,),
-                      const Text('Confirm Password'),
+                      const Text('Confirm Password',style: TextStyle(color:AppColors.color1)),
                       const SizedBox(height: 10,),
                       Container(
                         width: MediaQuery.of(context).size.width / 1.1,
@@ -278,9 +334,11 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           controller: confirmPassword,
                           focusNode: confirmPasswordNode,
+                          maxLength: 15,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.only(left: 10,top: 10),
+                            counterText: '',
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -344,7 +402,7 @@ class _SignUpState extends State<SignUp> {
                         children: [
                           const Text(
                             'Already have an account ? ',
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400,color: AppColors.color1),
                           ),
                           InkWell(
                             onTap: () {
@@ -367,4 +425,19 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  Widget _buildCircleAvatar() {
+    if (_image != null) {
+      return CircleAvatar(
+        radius: 50,
+        backgroundImage: FileImage(_image!),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 50,
+        backgroundColor: Color.fromRGBO(220, 228, 230, 1),
+      );
+    }
+  }
 }
+

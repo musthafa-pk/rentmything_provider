@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/view/profileView/profileView.dart';
 import 'package:rentmything/view/rentoutView/markingasrented.dart';
 class QrcodeScanPage extends StatefulWidget {
@@ -50,9 +51,15 @@ class _QrcodeScanPageState extends State<QrcodeScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: AppBarBackButton(),
+      ),
       body: Column(
         children: [
-          Text('Use customer profile tab qr code to get customer detials'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Scan customer Profile tab QR code to get customer detials'),
+          ),
           Expanded(
             flex: 5,
               child: QRView(

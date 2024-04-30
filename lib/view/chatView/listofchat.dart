@@ -74,7 +74,8 @@ class _ListofChatsState extends State<ListofChats> {
               );
             } else if (snapshot.hasData) {
               List<dynamic> chatList = snapshot.data!;
-              return ListView.builder(
+              return ListView
+                  .builder(
                 itemCount: chatList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
@@ -87,6 +88,7 @@ class _ListofChatsState extends State<ListofChats> {
                                 ? '${chatList[index]['receiver_name']}'
                                 : '${chatList[index]['sender_name']}',
                             senderId: Util.userId!,
+                            productId: chatList[index]['prod_id'],
                             reciverId: Util.userId == chatList[index]['sender_id']
                                 ? '${chatList[index]['receiver_id']}'
                                 : '${chatList[index]['sender_id']}',
@@ -108,12 +110,15 @@ class _ListofChatsState extends State<ListofChats> {
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
-                                    height: 100,
-                                    width: 100,
+                                    height: 80,
+                                    width: 80,
                                     decoration: BoxDecoration(
+                                      color: Colors.black,
                                       borderRadius: BorderRadius.circular(15),
                                       image: DecorationImage(
-                                        image: AssetImage('assets/images/van.jpg'),
+                                        image: NetworkImage(
+                                          chatList[index]['image'] != null && chatList[index]['image'].isNotEmpty ? chatList[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                        ),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -125,7 +130,7 @@ class _ListofChatsState extends State<ListofChats> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        'Van fresh 2024',
+                                        '${chatList[index]['prod_id']['name']}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           letterSpacing: 1,

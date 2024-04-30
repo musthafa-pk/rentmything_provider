@@ -142,11 +142,15 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
                                 height: 80,
                                 width: 80,
                                 decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: const DecorationImage(
-                                        image: AssetImage('assets/images/van.jpg'),
-                                        fit: BoxFit.cover)),
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      rentedData[index]['image'] != null && rentedData[index]['image'].isNotEmpty ? rentedData[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(

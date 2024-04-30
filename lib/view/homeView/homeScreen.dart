@@ -1,11 +1,16 @@
 
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rentmything/res/app_colors.dart';
-
+import 'package:rentmything/res/app_url.dart';
+import 'package:http/http.dart' as http;
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/favourite/favourite.dart';
 import 'package:rentmything/view/homeView/Machineries.dart';
+import 'package:rentmything/view/homeView/appliancescategory.dart';
 import 'package:rentmything/view/homeView/elctronicscategory.dart';
 import 'package:rentmything/view/homeView/popular.dart';
 import 'package:rentmything/view/homeView/searchPage.dart';
@@ -31,81 +36,52 @@ class _HomeViewState extends State<HomeView> {
     'assets/images/25off.jpg'
   ];
 
-  //getpopular items api
-  // List<dynamic> popularProducts = [];
+  List<dynamic> notificaitonlist = [];
 
-  // Future<dynamic> getpopularitems() async {
-  //   // Define the endpoint URL
-  //
-  //   String apiUrl = AppUrl.listPopular;
-  //   Map<String,dynamic> postData = {
-  //     'user_id':Util.userId
-  //   };
-  //
-  //   try {
-  //     // Make the POST request
-  //     http.Response response = await http.post(
-  //         Uri.parse(apiUrl),
-  //         headers: <String, String>{
-  //           'Content-Type': 'application/json; charset=UTF-8',
-  //         },
-  //         body: jsonEncode(postData)
-  //     );
-  //     if (response.statusCode == 200) {
-  //       print('get popular items success');
-  //       var responseData = jsonDecode(response.body);
-  //       print(responseData);
-  //
-  //         popularProducts.clear();
-  //         popularProducts.addAll(responseData['data']);
-  //         print('popular items list is:${popularProducts}');
-  //
-  //       print('popular data :$popularProducts');
-  //       print('Response: $responseData');
-  //     } else {
-  //       print('Error: ${response.statusCode}');
-  //       print('Error Message: ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
 
-  //add to favourite api
-  // static Future<dynamic> addtofavourite(String productID,context) async {
-  //
-  //   Map<String, dynamic> postData ={
-  //     "user_id":Util.userId,
-  //     "prod_id":productID
-  //   };
-  //   String url = AppUrl.wishlistAdd;
-  //
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(url),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(postData),
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       print('adding to fav success');
-  //       var responseData = jsonDecode(response.body);
-  //       Util.flushBarErrorMessage('${responseData['message']}', Icons.verified, Colors.green,context);
-  //       return responseData;
-  //     } else {
-  //       var responseData = jsonDecode(response.body);
-  //       print('failed response:${responseData}');
-  //       Util.flushBarErrorMessage('${responseData['message']}',Icons.sms_failed,Colors.red,context);
-  //       print("API request failed with status code: ${response.statusCode}");
-  //       print(responseData);
-  //
-  //     }
-  //   } catch (e) {
-  //     print("Error making POST request: $e");
-  //   }
-  // }
+  Future<dynamic> getnotification() async {
+    print('get notification called....');
+    // Define the endpoint URL
+
+    String apiUrl = AppUrl.getnotification;
+    Map<String, dynamic> postData = {'user_id': Util.userId};
+
+    try {
+      // Make the POST request
+      http.Response response = await http.post(Uri.parse(apiUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(postData));
+      if (response.statusCode == 200) {
+        print('get notifications');
+        var responseData = jsonDecode(response.body)['data'];
+        setState(() {
+          notificaitonlist.clear();
+          notificaitonlist.addAll(responseData);
+        });
+        return notificaitonlist;
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Error Message: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  void checkNotifications() {
+    Timer.periodic(Duration(seconds: 3), (timer) {
+      getnotification().then((notifications) {
+        setState(() {
+          notificaitonlist.clear();
+          notificaitonlist.addAll(notifications);
+        });
+      }).catchError((error) {
+        print('Error fetching notifications: $error');
+      });
+    });
+  }
 
   final _TabPages = <Widget>[
     const PopularView(),
@@ -113,6 +89,7 @@ class _HomeViewState extends State<HomeView> {
     ElectronicsCategory(category: 'Electronics',),
     Machineries(category: 'Machineries',),
     Tools(category: 'Tools',),
+    AppliancesCategory(category: 'Appliances')
   ];
 
   final _Tabs = <Tab>[
@@ -121,6 +98,11 @@ class _HomeViewState extends State<HomeView> {
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/electronics.png'),height: 24,width: 24,),),text: 'Electronics',),
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/machinary.png'),height: 24,width: 24,),),text: 'Machineries',),
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Tools',),
+    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Appliances',),
+    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Furnitures',),
+    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Cloth',),
+    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Land & Building',),
+    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Other',),
   ];
 
 
@@ -141,6 +123,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     // getpopularitems();
+    getnotification();
+    checkNotifications();
     print('Utils.userId: ${Util.userId}');
     super.initState();
   }
@@ -152,7 +136,7 @@ class _HomeViewState extends State<HomeView> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height/4,
+            toolbarHeight: MediaQuery.of(context).size.height/3.5,
             automaticallyImplyLeading: false,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -204,7 +188,7 @@ class _HomeViewState extends State<HomeView> {
                                         width: 10,
                                         padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(
-                                          color: AppColors.color6, // or any other color you want for the badge background
+                                          color:notificaitonlist.any((notification) => notification['read'] == 'N')? AppColors.color6 : Colors.transparent, // or any other color you want for the badge background
                                           borderRadius: BorderRadius.circular(10),
                                         ),
 
@@ -238,7 +222,6 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     Container(
-                      height: 60,
                       decoration: BoxDecoration(
                           color: AppColors.color2, borderRadius: BorderRadius.circular(15)),
                       child: Padding(
@@ -294,6 +277,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     TabBar(
+                      tabAlignment: TabAlignment.start,
                         tabs: _Tabs,
                       indicatorSize: TabBarIndicatorSize.label,
                       indicatorColor: Colors.white,
@@ -308,47 +292,6 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
-          // backgroundColor: Colors.white,
-          // floatingActionButton: InkWell(
-          //   onTap: () {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => RentOut1(),
-          //         ));
-          //   },
-          //   child: Container(
-          //     width: 120,
-          //     decoration: BoxDecoration(
-          //         color: AppColors.color1, borderRadius: BorderRadius.circular(50)),
-          //     child: Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           Text(
-          //             'Rent Out',
-          //             style: TextStyle(
-          //                 fontSize: 12,
-          //                 color: Colors.white,
-          //                 fontWeight: FontWeight.w500),
-          //           ),
-          //           SizedBox(
-          //             width: 10.0,
-          //           ),
-          //           Container(
-          //               decoration: BoxDecoration(
-          //                   color: Colors.white,
-          //                   borderRadius: BorderRadius.circular(100)),
-          //               child: Icon(
-          //                 Icons.add,
-          //                 color: AppColors.color1,
-          //               )),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
           body:  TabBarView(
               children: _TabPages
           ),

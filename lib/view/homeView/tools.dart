@@ -100,12 +100,17 @@ class _ToolsState extends State<Tools> {
                                       height: 80,
                                       width: 80,
                                       decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          borderRadius: BorderRadius.circular(15),
-                                          image: const DecorationImage(
-                                              image: AssetImage('assets/images/van.jpg'),
-                                              fit: BoxFit.cover)),
-                                    ),),
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            listofelectronics[index]['image'] != null && listofelectronics[index]['image'].isNotEmpty ? listofelectronics[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   const SizedBox(
                                     width: 20.0,
                                   ),

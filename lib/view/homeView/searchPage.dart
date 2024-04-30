@@ -142,7 +142,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
 
-
   @override
   void dispose() {
     searchController.dispose();
@@ -207,8 +206,10 @@ class _SearchPageState extends State<SearchPage> {
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(15),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/van.jpg'),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                _suggestions[index]['image'] != null && _suggestions[index]['image'].isNotEmpty ? _suggestions[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),

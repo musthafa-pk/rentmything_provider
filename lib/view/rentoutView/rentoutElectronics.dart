@@ -8,7 +8,9 @@ import 'package:rentmything/res/app_url.dart';
 
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
+import 'package:rentmything/res/components/districtTyper.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
 
@@ -45,9 +47,11 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
 
 
+
+
   // product adding api calling function
   Future<void> addProduct() async {
-
+    print('rent out called...');
     // Prepare the data to be sent in the request body
     Map<String, dynamic> data = {
       "name": title.text,
@@ -55,7 +59,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
       "subcategory": widget.subcategory,
       "contact_number": Util.userPhoneNumber,
       "brand": brand.text.toUpperCase(),
-      "year": year.text,
+      "year": int.parse(year.text.toString()),
       "subtype1": "one",
       "subtype2": km_driven.text,
       "subtype3": selectedFuelType,
@@ -63,7 +67,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
       "time_period": timePeriod,
       "location": location.text,
       "rent_status": false,
-      "price": price.text,
+      "price": int.parse(price.text.toString()),
       "availability": "Sun-Mon",
       "created_by":Util.userId
     };
@@ -71,36 +75,56 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
     // Encode the data into JSON format
     String jsonEncodedData = json.encode(data);
 
+    var request = http.MultipartRequest('POST',Uri.parse(AppUrl.addProduct));
+    for(var file in Util.imageFiles){
+      request.files.add(await http.MultipartFile.fromPath('image',file.path));
+      print('test:');
+    }
+
+    data.forEach((key,value){
+      request.fields[key] = value.toString();
+    });
+
     try {
+      final response = await request.send();
       // Make the POST request
-      http.Response response = await http.post(
-        Uri.parse(AppUrl.addProduct),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncodedData,
-      );
+      // http.Response response = await http.post(
+      //   Uri.parse(AppUrl.addProduct),
+      //   headers: <String, String>{
+      //     'Content-Type': 'application/json; charset=UTF-8',
+      //   },
+      //   body: jsonEncodedData,
+      // );
 
       // Check if the request was successful (status code 200)
       if (response.statusCode == 200) {
-        print('product added successfully');
+        // print('product added successfully');
         Util.flushBarErrorMessage('Product added successfully', Icons.verified, Colors.green, context);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const SuccessView()));
-        // Parse the response JSON
-        Map<String, dynamic> responseData = json.decode(response.body);
-
-        // Do something with the response data
-        print('Response: $responseData');
+        // // Parse the response JSON
+        // Map<String, dynamic> responseData = json.decode(response.body);
+        //
+        // // Do something with the response data
+        // print('Response: $responseData');
       } else {
+        var responsedata = response;
+        // Util.flushBarErrorMessage('${responsedata}',Icons.sms_failed , Colors.red, context);
         // If the request was not successful, print the error status code and message
         print('Error: ${response.statusCode}');
-        print('Error Message: ${response.body}');
+        print('Error Message: ${response}');
       }
     } catch (e) {
       // Catch any errors that occur during the request
       print('Error: $e');
     }
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    Util.imageFiles.clear();
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +135,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
               Navigator.pop(context);
             },
             child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
-        title: const Text('Details',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
+        title: Text('${widget.subcategory} Details',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -128,33 +152,10 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       padding: EdgeInsets.all(8.0),
                       child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  image: const DecorationImage(image: AssetImage('assets/images/redcar.jpg'),fit: BoxFit.cover)
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 100,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: const Color.fromRGBO(7,59, 76, 0.18)
-                            ),
-                            child: const Center(child: Icon(Icons.add,color: Color.fromRGBO(88, 88, 88, 1),)),
-                          ),
-                        ],
-                      ),),
+                    SizedBox(
+                        height: 100,
+                        // width: MediaQuery.of(context).size.width/1.1,
+                        child: ImagesPicker()),
                     const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     SizedBox(height: 10,),
                     Container(
@@ -185,7 +186,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Year',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Model',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -196,6 +197,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: year,
                         focusNode: yearNode,
+                        keyboardType: TextInputType.number,
                         validator: (v){
                           Util.fieldFocusChange(context, yearNode,km_drivernNode);
                         },
@@ -209,83 +211,19 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Text('Fuel Type'),
-                    ),
-                    FuelType(onFuelTypeSelected: (fuelType){
-                      setState(() {
-                        selectedFuelType = fuelType;
-                      });
-                    },),
-                    // SingleChildScrollView(
-                    //   scrollDirection: Axis.horizontal,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //     children: [
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Petrol')),
-                    //       ),
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Diesel')),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: AppColors.color1,
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Electric',style: TextStyle(color: Colors.white),)),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('CNG')),
-                    //       ),
-                    //
-                    //       const SizedBox(width: 10,),
-                    //
-                    //       Container(
-                    //         width: 115,
-                    //         height: 40,
-                    //         decoration: BoxDecoration(
-                    //             color: const Color.fromRGBO(7, 59, 76, 0.18),
-                    //             borderRadius: BorderRadius.circular(6)
-                    //         ),
-                    //         child: const Center(child: Text('Water')),
-                    //       ),
-                    //     ],
-                    //   ),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: const Text('Fuel Type'),
                     // ),
+                    // FuelType(onFuelTypeSelected: (fuelType){
+                    //   setState(() {
+                    //     selectedFuelType = fuelType;
+                    //   });
+                    // },),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Km Driven',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Year of use',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -296,6 +234,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: km_driven,
                         focusNode: km_drivernNode,
+                        keyboardType: TextInputType.number,
                         validator: (v){
                           if(v == null || v.isEmpty){
                             return 'Please enter the kelometer driven';
@@ -324,7 +263,9 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: title,
                         focusNode: titleNode,
-                        validator: (v){},
+                        validator: (v){
+
+                        },
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, titleNode, descriptionNode);
                         },
@@ -369,7 +310,8 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       width: MediaQuery.of(context).size.width/1.1,
                       child: Row(
                         children: [
-                          SizedBox(width: 125,
+                          SizedBox(
+                            width: 125,
                             child: Container(
                                 width: MediaQuery.of(context).size.width/1.1,
                                 decoration: BoxDecoration(
@@ -388,8 +330,9 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                             child: Column(
                               children: [
                                 Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(7, 59, 76, 0.18)
+                                  decoration:  BoxDecoration(
+                                      color: Color.fromRGBO(7, 59, 76, 0.18),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: TextFormField(
                                     controller: price,
@@ -406,7 +349,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                                     },
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
-                                        contentPadding: EdgeInsets.only(left: 10)
+                                        contentPadding: EdgeInsets.only(left: 10),
                                     ),
                                   ),
                                 ),
@@ -441,6 +384,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                         },
                         decoration: const InputDecoration(
                           border: InputBorder.none,
+                          hintText: 'District , place',
                           contentPadding: EdgeInsets.only(left: 10),
                         ),
                       ),

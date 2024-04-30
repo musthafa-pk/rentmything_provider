@@ -176,11 +176,25 @@ class _MarkingasRentedState extends State<MarkingasRented> {
                 children: [
                   Column(
                     children: [
-                      CircleAvatar(radius: 50,
-                      backgroundColor: AppColors.color1,
-                      child: Text('${userData['data']['name'].toString().substring(0,1)}',
-                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 28,color: Colors.white),),),
-                      Text('${userData['data']['name']}'),
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: AppColors.color1,
+                        backgroundImage: userData['data']['image'] != null && userData['data']['image'].isNotEmpty
+                            ? NetworkImage('${userData['data']['image']}')
+                            : null,
+                        child: userData['data']['image'] != null && userData['data']['image'].isNotEmpty
+                            ? null
+                            : Text(
+                          '${userData['data']['name'].toString().substring(0, 1)}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      Text('${userData['data']['name'].toString().toUpperCase()}',style: TextStyle(fontWeight: FontWeight.bold),),
                       Text('${userData['data']['email']}'),
                       Text('${userData['data']['phone_number']}'),
                     ],

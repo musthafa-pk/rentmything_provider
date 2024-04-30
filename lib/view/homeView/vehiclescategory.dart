@@ -22,7 +22,8 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
 
   Future<dynamic> getvehicles() async {
     Map<String, dynamic> data = {
-      "category":widget.category
+      "category":widget.category,
+      "user_id":Util.userId
     };
     // Define your endpoint URL
     String url = AppUrl.getProductbycatego;
@@ -42,8 +43,8 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
         // Decode the response body from JSON
         var responseData = jsonDecode(response.body);
         print(responseData);
-        vehiclescategory.clear();
-        vehiclescategory.addAll(responseData['data']);
+          vehiclescategory.clear();
+          vehiclescategory.addAll(responseData['data']);
         // Return the decoded response data
         return responseData;
       } else {
@@ -74,6 +75,9 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
       );
 
       if (response.statusCode == 200) {
+        setState(() {
+
+        });
         print('adding to fav success');
         var responseData = jsonDecode(response.body);
         Util.flushBarErrorMessage('${responseData['message']}',
@@ -94,7 +98,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
 
   @override
   void initState() {
-    vehiclescategory.clear();
+    // vehiclescategory.clear();
     // TODO: implement initState
     getvehicles();
     super.initState();
@@ -115,7 +119,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                   return const Center(child: Text('Some error happened'),);
                 }if(snapshot.hasData){
                   return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: vehiclescategory.length,
                     itemBuilder: (context, index) {
                       return Center(
                         child: InkWell(
@@ -138,15 +142,19 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                   child: Row(
                                     children: [
                                       Padding(padding: const EdgeInsets.only(left: 10),
-                                        child: Container(
+                                        child:Container(
                                           height: 80,
                                           width: 80,
                                           decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.circular(15),
-                                              image: const DecorationImage(
-                                                  image: AssetImage('assets/images/van.jpg'),
-                                                  fit: BoxFit.cover)),
+                                            color: Colors.black,
+                                            borderRadius: BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                vehiclescategory[index]['image'] != null && vehiclescategory[index]['image'].isNotEmpty ? vehiclescategory[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),),
                                       const SizedBox(
                                         width: 20.0,
@@ -164,6 +172,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                                                   style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight: FontWeight.w500,
+                                                      color: AppColors.color1,
                                                       letterSpacing: 1),
                                                 ),
                                                 const SizedBox(
@@ -214,7 +223,7 @@ class _VehiclesCategoryState extends State<VehiclesCategory> {
                               Positioned(
                                   top: 10,
                                   right: 10,
-                                  child:snapshot.data['data'][index]['rent_status'] == false ? InkWell(
+                                  child:snapshot.data['data'][index]['wishlist'] == false ? InkWell(
                                     onTap: (){
                                       addtofavourite('${snapshot.data['data'][index]['_id']}', context);
                                     },

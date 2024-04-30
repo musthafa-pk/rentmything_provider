@@ -5,6 +5,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/view/bottomNavigationPage.dart';
 class OtpScreen extends StatefulWidget {
   String? email;
@@ -49,64 +50,85 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          onTap: (){},
-            child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+        leading: AppBarBackButton(),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('CODE',style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Poppins',
-              color: AppColors.color1,
-              fontSize: 80.0,
-            ),),
-            const Text('Verification',style: TextStyle(
-                color: AppColors.color1,
-                fontWeight: FontWeight.bold,
-              fontFamily: 'Poppins'
-            ),),
-            const SizedBox(height: 20.0,),
-            Text('Enter Verification code recieved on ${widget.email}',textAlign:TextAlign.center,style: TextStyle(
-              fontFamily: 'Poppins'
-            ),),
-            const SizedBox(height: 20.0,),
-            OtpTextField(
-              numberOfFields: 6,
-
-              fillColor: Colors.black.withOpacity(0.1),
-              filled: true,
-              keyboardType: TextInputType.number,
-              focusedBorderColor: AppColors.color1,
-              onSubmit: (code){
-                print('otp is $code');
-                setState(() {
-                  otp_data = code;
-                });
-              },
-            ),
-            const SizedBox(height: 20.0,),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: (){
-                    verifywithotp();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:AppColors.color1,
-                  ),
-                  child: const Text('Next',style: TextStyle(color: Colors.white,fontFamily: 'Poppins'),)),
-            )
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'CODE',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                  color: AppColors.color1,
+                  fontSize: 80.0,
+                ),
+              ),
+              const Text(
+                'Verification',
+                style: TextStyle(
+                  color: AppColors.color1,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              const SizedBox(height: 20.0,),
+              Text(
+                'Enter Verification code received on ${widget.email}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              const SizedBox(height: 20.0,),
+              Expanded(
+                child: Column(
+                  children: [
+                    OtpTextField(
+                      numberOfFields: 6,
+                      fillColor: Colors.black.withOpacity(0.1),
+                      filled: true,
+                      keyboardType: TextInputType.number,
+                      focusedBorderColor: AppColors.color1,
+                      onSubmit: (code) {
+                        print('otp is $code');
+                        setState(() {
+                          otp_data = code;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20.0,),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          verifywithotp();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.color1,
+                        ),
+                        child: const Text(
+                          'Next',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
 }

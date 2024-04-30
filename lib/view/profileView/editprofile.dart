@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/profileView/profileView.dart';
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -18,9 +21,11 @@ class _EditProfileState extends State<EditProfile> {
   final name = TextEditingController();
   final phoneNumber = TextEditingController();
   final email = TextEditingController();
-
-
+  String? userImage;
+  File? _image;
+  String? base64Image;
   bool isEditing = false;
+  List<dynamic> userData = [];
 
   @override
   void initState() {
@@ -42,90 +47,90 @@ class _EditProfileState extends State<EditProfile> {
       );
 
       if (response.statusCode == 200) {
-        print('drivergot');
-        print('driver data');
         final dynamic responseData = jsonDecode(response.body);
-        print(responseData['data']);
         setState(() {
           name.text = responseData['data']['name'];
           email.text = responseData['data']['email'];
           phoneNumber.text = responseData['data']['phone_number'];
+          userImage = responseData['data']['image'];
         });
       } else {
         print('HTTP request failed with status code: ${response.statusCode}');
-        // Handle error - Update UI to indicate an error
       }
     } catch (error) {
       print('Error during HTTP request: $error');
-      // Handle error - Update UI to indicate an error
     }
   }
 
   Future<void> saveuserData() async {
+    if(_image == null){
+      Util.flushBarErrorMessage('Pick image first', Icons.sms_failed, Colors.red, context);
+      return;
+    }
     final url = Uri.parse(AppUrl.userEdit);
-    final requestBody = {
-      "id": Util.userId,
-      "name": name.text,
-      "password": "111111",
-      "email":email.text,
-      "phone_number": phoneNumber.text
-    };
+    var request = http.MultipartRequest('POST',url);
+    request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
+
+    request.fields['id'] = Util.userId!;
+    request.fields['name'] = name.text;
+    request.fields['password'] = '111111';
+    request.fields['email'] = email.text;
+    request.fields['phone_number'] = phoneNumber.text;
 
     try {
-      final response = await http.post(
-        url,
-        body: jsonEncode(requestBody),
-        headers: {"Content-Type": "application/json"},
-      );
-      print(jsonEncode(requestBody));
-      print(response.statusCode);
+      final response = await request.send();
       if (response.statusCode == 200) {
-        print('its changed user data');
-        // fetchUserData();
-        dynamic responseData = jsonDecode(response.body);
-        Util.flushBarErrorMessage('${responseData['message']}', Icons.verified, Colors.green, context);
-        print(responseData['data']);
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const ProfileView()), (route) => false);
-        // setState(() {
-        //   name.text = responseData['data']['name'];
-        //   email.text = responseData['data']['email'];
-        //   phoneNumber.text = responseData['data']['phone_number'];
-        // });
       } else {
+        final responseBody = await response.stream.bytesToString();
+        print('responseBody$responseBody');
         print('HTTP request failed with status code: ${response.statusCode}');
-        // Handle error - Update UI to indicate an error
       }
     } catch (error) {
       print('Error during HTTP request: $error');
-      // Handle error - Update UI to indicate an error
     }
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
-
-  // void handleListResponse(List<dynamic> responseData) {
-  //   if (responseData.isNotEmpty) {
-  //     setState(() {
-  //       userData = responseData[0];
-  //       updateUI();
-  //     });
-  //   } else {
-  //     // Handle empty list scenario
-  //   }
-  // }
-
-  // void handleMapResponse(Map<String, dynamic> responseData) {
-  //   setState(() {
-  //     userData = responseData['data'][0];
-  //     updateUI();
-  //   });
-  // }
-
-  // void updateUI() {
-  //   name.text = userData?['name'] ?? '';
-  //   phoneNumber.text = userData?['phone_no'] ?? '';
-  //   email.text = userData?['email'] ?? '';
-  // }
+  Future<void> _showImagePickerDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Image Source"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                GestureDetector(
+                  child: Text("Camera"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.camera);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8.0)),
+                GestureDetector(
+                  child: Text("Gallery"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.gallery);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,19 +144,21 @@ class _EditProfileState extends State<EditProfile> {
               Row(
                 children: [
                   IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      )),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                  ),
                   const Text(
                     'Profile',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
@@ -161,17 +168,32 @@ class _EditProfileState extends State<EditProfile> {
                 children: [
                   Stack(
                     children: [
-                      const CircleAvatar(
+                      _image != null
+                          ? CircleAvatar(
                         radius: 50,
-                      ),
-                     isEditing == true ? const Positioned(
+                        backgroundImage: FileImage(_image!),
+                      )
+                          : (userImage != null
+                          ? CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage('$userImage'),
+                      )
+                          : Center(child: CircleAvatar(radius: 50))),
+                      isEditing == true
+                          ? Positioned(
                         bottom: 0,
-                          right: 0,
-                          child: Icon(Icons.edit)):const Text(''),
+                        right: 0,
+                        child: InkWell(
+                          onTap: _showImagePickerDialog,
+                          child: Icon(Icons.edit),
+                        ),
+                      )
+                          : const Text(''),
                     ],
                   ),
                 ],
               ),
+
               const SizedBox(height: 20),
               SizedBox(
                 child: MyTextFieldWidget(
@@ -195,7 +217,6 @@ class _EditProfileState extends State<EditProfile> {
                 enabled: isEditing,
                 validator: () {},
               ),
-              
 
               const SizedBox(height: 100),
               Padding(
@@ -203,10 +224,8 @@ class _EditProfileState extends State<EditProfile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-
                     SizedBox(
                       height: 52,
-                      // width: MediaQuery.of(context).size.width/1.1,
                       child: MyButtonWidget(
                         buttonName: isEditing ? "Save" : "Edit",
                         bgColor: AppColors.color1,
@@ -229,7 +248,6 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
 }
 
 class MyButtonWidget extends StatelessWidget {
@@ -245,8 +263,8 @@ class MyButtonWidget extends StatelessWidget {
       width: 296,
       height: 40,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          color: bgColor
+        borderRadius: BorderRadius.circular(6),
+        color: bgColor,
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: bgColor),
@@ -278,32 +296,31 @@ class MyTextFieldWidget extends StatelessWidget{
             child: Text(labelName),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: 323.0,
-                height: 40.0,
-                child: TextFormField(
-                  controller: controller,
-                  enabled: enabled,
-                  obscureText: isObsecure,
-                  validator:  (value) {
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    suffixIcon: InkWell(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 323.0,
+              height: 40.0,
+              child: TextFormField(
+                controller: controller,
+                enabled: enabled,
+                obscureText: isObsecure,
+                validator:  (value) {
+                  return null;
+                },
+                decoration: InputDecoration(
+                  filled: true,
+                  suffixIcon: InkWell(
                       onTap: (){},
-                        child: Icon(icon)),
-                    fillColor: AppColors.color2,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                      child: Icon(icon)),
+                  fillColor: AppColors.color2,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                    borderSide: BorderSide.none,
                   ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                 ),
-              )
-
+              ),
+            ),
           ),
         ],
       ),

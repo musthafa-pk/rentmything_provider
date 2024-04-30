@@ -4,9 +4,10 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rentmything/res/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:io';
 
 class Util{
 
@@ -16,9 +17,10 @@ class Util{
   static String? userEmail;
   static String? userPhoneNumber;
   static String? userName;
+
+  static List<File> imageFiles = [];
   
   static final Future<SharedPreferences>  prefs = SharedPreferences.getInstance();
-
 
   // next field focused in textField
   static fieldFocusChange(
@@ -60,8 +62,10 @@ class Util{
         margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
         padding: const EdgeInsets.all(15),
         message: message,
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 0.5),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         messageColor: Colors.black,
+        borderWidth: 1,
+        borderColor: AppColors.color2,
         duration: const Duration(seconds: 3),
       )..show(context),
     );}

@@ -24,6 +24,12 @@ class AppUrl{
 
   static String userEdit = '$baseUrl/user/editUser';
 
+  static String forgotpwd = '$baseUrl/user/forgotPwd';
+
+  static String resetPassword = '$baseUrl/user/resetPwd';
+
+  static String loginwithotp = '$baseUrl/user/otpLogin';
+
   static String emailVerifiication = '$baseUrl/user/emailverification';
 
   //category api
@@ -55,6 +61,8 @@ class AppUrl{
   static String getProductDetials = '$baseUrl/products/productdetails';
 
   static String getProductbycatego = '$baseUrl/products/prodcategory';
+
+  static String deleteproduct = '$baseUrl/products/deleteproduct';
 
   //popular products
   static String listPopular = '$baseUrl/products/popularproduct';

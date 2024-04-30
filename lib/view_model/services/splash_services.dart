@@ -20,10 +20,13 @@ class SplashService{
       if(value.token.toString() == 'null' || value.token.toString() == ''){
         final userPrefrences = await SharedPreferences.getInstance();
         final userId = userPrefrences.getString('userId');
+        final useremail = userPrefrences.getString('email');
         print('helooo:$userId');
+        print('user email is :${Util.userEmail}');
         await Future.delayed(const Duration(seconds: 3));
         if(userId != null){
           Util.userId = userId;
+          Util.userEmail = useremail;
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>BottomNavigationPage()), (route) => false);
         }else
           {
@@ -36,6 +39,7 @@ class SplashService{
 
     }).onError((error, stackTrace){
       if(kDebugMode){
+        Util.flushBarErrorMessage('${error}', Icons.warning, Colors.red, context);
         print(error.toString());
       }
     });

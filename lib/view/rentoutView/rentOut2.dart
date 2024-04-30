@@ -9,6 +9,9 @@ import 'package:rentmything/res/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/rentoutView/rentOutVehicle.dart';
+import 'package:rentmything/view/rentoutView/rentoutElectronics.dart';
+import 'package:rentmything/view/rentoutView/rentoutFurniture.dart';
+import 'package:rentmything/view/rentoutView/rentoutLandBuilding.dart';
 import 'package:rentmything/view/rentoutView/rentoutOther.dart';
 
 class RentOut2 extends StatefulWidget {
@@ -100,11 +103,62 @@ class _RentOut2State extends State<RentOut2> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: InkWell(
                                     onTap: (){
-                                      if(widget.itemName == 'other'){
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>RentOutOther(category: widget.itemName, subCategory: '${allSubCategories['data'][index]['name']}')));
+                                      switch (widget.itemName) {
+                                        case 'Vehicles':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutVehicle(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Electronics':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Appliances':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Machineries':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Tools':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Furnitures':
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => RentOutFurniture(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                          );
+                                          break;
+                                        case 'Cloth':
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                        // );
+                                          break;
+                                        case 'Land & Building':
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => RentOutLandBuilding(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                        );
+                                          break;
+                                        default:
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) =>  RentOutOther(category: widget.itemName, subCategory: 'other',),)
+                                          );
                                       }
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>RentOutVehicle(category:widget.itemName,subcategory:' ${allSubCategories['data'][index]['name']}',)));
-                                  },
+                                    },
                                     child: Container(
                                       height: 90,
                                       width: 90,
