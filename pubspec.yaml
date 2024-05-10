@@ -58,7 +58,7 @@ dependencies:
   file_picker: ^8.0.0+1
   image_picker: ^1.0.8
   flutter_typeahead: ^5.2.0
-
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -118,6 +118,13 @@ flutter:
     - assets/lottie/loginanime.json
     - assets/lottie/notificationbell_anime.json
     - assets/lottie/nodatafound.json
+    - assets/icons/appliances.svg
+    - assets/icons/couch.svg
+    - assets/icons/house-building.svg
+    - assets/icons/dot-pending.svg
+    - assets/icons/clothes-hanger.svg
+    - assets/icons/sofa.svg
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -6,6 +6,7 @@ import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/view/rentoutView/rentOut2.dart';
 
 class RentOut1 extends StatefulWidget {
@@ -54,9 +55,7 @@ class _RentOut1State extends State<RentOut1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(onTap: (){
-          Navigator.pop(context);
-        },child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
+        leading: AppBarBackButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -67,12 +66,18 @@ class _RentOut1State extends State<RentOut1> {
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(15.0),
-                    child: Text('Rent Your Product',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16 ),),
+                    child: Text('Rent Your Product',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.color1,
+                        fontSize: 16 ),),
                   ),),
                 const SizedBox(height: 20,),
                 const Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text('Select Category',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
+                  child: Text('Select Category',style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.color1,
+                      fontSize: 16),),
                 ),
                 const SizedBox(height: 20.0,),
                 FutureBuilder(
@@ -119,7 +124,7 @@ class _RentOut1State extends State<RentOut1> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           // Image.network('${allCategories['data'][index]['icon'].toString()}'),
-                                          Text(allCategories[index]['name'].toString(),style: const TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),),
+                                          Text(allCategories[index]['name'].toString(),style: const TextStyle(fontSize: 8,fontWeight: FontWeight.w400,color: AppColors.color1),),
                                         ],
                                       ),
                                     ),

@@ -41,7 +41,7 @@ class _FinishedAdsState extends State<FinishedAds> {
         print('get rented items success');
         var responseData = jsonDecode(response.body);
         print(responseData);
-        List<dynamic> filterData = responseData['data'].where((item) => item['prod_id']['created_by'] != Util.userId && item['prod_id']['rent_status'] == 'finished').toList();
+        List<dynamic> filterData = responseData['data'].where((item) => item['prod_id']['created_by'] != Util.userId && item['rent_status'] == 'finished').toList();
         setState(() {
           rentedData.clear();
           rentedData.addAll(filterData);
@@ -104,6 +104,21 @@ class _FinishedAdsState extends State<FinishedAds> {
   }
 
   Widget _buildPopularProductsList() {
+    DateTime startDate =
+    DateTime.parse(rentedData[0]['start_date']);
+    DateTime endDate =
+    DateTime.parse(rentedData[0]['end_date']);
+    DateTime now = DateTime.now();
+    double progress = now.isBefore(endDate)
+        ? now
+        .difference(startDate)
+        .inDays
+        .toDouble() /
+        endDate
+            .difference(startDate)
+            .inDays
+            .toDouble()
+        : 1.0;
     // Build each item in the list
     return RefreshIndicator(
       onRefresh:getRentedData,
@@ -171,6 +186,7 @@ class _FinishedAdsState extends State<FinishedAds> {
                                         '₹ ${rentedData[index]['prod_id']['price']}',
                                         style: const TextStyle(
                                             fontSize: 16,
+                                            color: AppColors.color1,
                                             fontWeight: FontWeight.w500,
                                             letterSpacing: 1),
                                       ),
@@ -250,7 +266,7 @@ class _FinishedAdsState extends State<FinishedAds> {
                                         SizedBox(
                                           width: 80,
                                           child: Flexible(
-                                            child: Text('10 Month Agreement',
+                                            child: Text('${rentedData[index]['agreementDuration']['days']}Days agreement',
                                                 style: TextStyle(
                                                     fontSize: 8,
                                                     fontWeight: FontWeight.w400,
@@ -281,7 +297,7 @@ class _FinishedAdsState extends State<FinishedAds> {
                                       padding: EdgeInsets.only(
                                           top: 10.0, bottom: 10.0),
                                       child: LinearProgressIndicator(
-                                        value: 0.5,
+                                        value: progress,
                                         backgroundColor:
                                         Color.fromRGBO(217, 217, 217, 1),
                                         color: Color.fromRGBO(25, 178, 0, 1),

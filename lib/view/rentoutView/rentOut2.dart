@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rentmything/res/app_colors.dart';
 
@@ -7,7 +8,9 @@ import 'package:rentmything/res/app_url.dart';
 
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/utils/utls.dart';
+import 'package:rentmything/view/rentoutView/rentOutTools.dart';
 import 'package:rentmything/view/rentoutView/rentOutVehicle.dart';
 import 'package:rentmything/view/rentoutView/rentoutElectronics.dart';
 import 'package:rentmything/view/rentoutView/rentoutFurniture.dart';
@@ -68,9 +71,7 @@ class _RentOut2State extends State<RentOut2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(onTap: (){
-          Navigator.pop(context);
-        },child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+        leading: AppBarBackButton(),
       ),
       body: SafeArea(
         child: Padding(
@@ -80,7 +81,9 @@ class _RentOut2State extends State<RentOut2> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Text(widget.itemName,style: const TextStyle(fontWeight: FontWeight.w600,fontSize: 16 ),),
+                  child: Text(widget.itemName,style: const TextStyle(
+                    color: AppColors.color1,
+                      fontWeight: FontWeight.w600,fontSize: 16 ),),
                 ),
                 const SizedBox(height: 20,),
                 FutureBuilder(
@@ -131,7 +134,7 @@ class _RentOut2State extends State<RentOut2> {
                                         case 'Tools':
                                           Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => RentOutElectronics(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
+                                            MaterialPageRoute(builder: (context) => RentOutTools(category: widget.itemName, subcategory: '${allSubCategories['data'][index]['name']}')),
                                           );
                                           break;
                                         case 'Furnitures':
@@ -176,13 +179,12 @@ class _RentOut2State extends State<RentOut2> {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                        child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            // SizedBox(height: 24,width: 24,child: Image.network('${allSubCategories['data'][index]['icon']}'),),
                                             Text('${allSubCategories['data'][index]['name']}',
-                                              style: const TextStyle(fontSize: 10,fontWeight: FontWeight.w400,color: AppColors.color1),)
+                                              overflow: TextOverflow.fade,
+                                              style: const TextStyle(fontSize: 8,fontWeight: FontWeight.w400,color: AppColors.color1),)
                                           ],
                                         ),
                                       ),

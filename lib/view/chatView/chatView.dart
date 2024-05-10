@@ -4,6 +4,7 @@ import 'package:rentmything/view/bottomNavigationPage.dart';
 import 'package:rentmything/view/chatView/buyyingChat.dart';
 import 'package:rentmything/view/chatView/listofchat.dart';
 import 'package:rentmything/view/chatView/sellingChat.dart';
+import 'package:rentmything/view/chatView/veiw_chat.dart';
 
 class chatView extends StatefulWidget {
   const chatView({super.key});
@@ -30,12 +31,12 @@ class _chatViewState extends State<chatView> {
         length: _addTabs.length,
         child: Scaffold(
             appBar: AppBar(
-              title: Text('Chat'),
+              title: Text('Chat',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),),
               leading: InkWell(
                   onTap: (){
                     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const BottomNavigationPage()));
                   },
-                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,size: 35,)),
               bottom: TabBar(tabs: _addTabs,
                 labelColor: AppColors.color1,
                 indicatorColor: AppColors.color1,),

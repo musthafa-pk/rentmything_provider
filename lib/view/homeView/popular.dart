@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../res/components/RentTypeWidget.dart';
+
 class PopularView extends StatefulWidget {
   const PopularView({super.key});
 
@@ -19,7 +21,6 @@ class PopularView extends StatefulWidget {
 }
 
 class _PopularViewState extends State<PopularView> {
-
   int _currentIndex = 0;
 
   ScrollController scrollController = ScrollController();
@@ -55,12 +56,11 @@ class _PopularViewState extends State<PopularView> {
         print('get popular items success');
         var responseData = jsonDecode(response.body);
         // setState(() {
-          popularProducts.clear();
-          popularProducts.addAll(responseData['data']);
+        popularProducts.clear();
+        popularProducts.addAll(responseData['data']);
         // });
         return popularProducts;
-      } else {
-      }
+      } else {}
     } catch (e) {
       print('Error: $e');
     }
@@ -86,11 +86,9 @@ class _PopularViewState extends State<PopularView> {
       if (response.statusCode == 200) {
         print('adding to fav success');
         var responseData = jsonDecode(response.body);
-        Util.flushBarErrorMessage('${responseData['message']}',
-            Icons.verified, Colors.green, context);
-        setState(() {
-
-        });
+        Util.flushBarErrorMessage('${responseData['message']}', Icons.verified,
+            Colors.green, context);
+        setState(() {});
         return responseData;
       } else {
         var responseData = jsonDecode(response.body);
@@ -107,9 +105,7 @@ class _PopularViewState extends State<PopularView> {
 
   // get rented items data
   Future<dynamic> getrentedData() async {
-    Map<String, dynamic> postData = {
-      "id":Util.userId
-    };
+    Map<String, dynamic> postData = {"id": Util.userId};
     String url = AppUrl.getRentedData;
 
     try {
@@ -142,11 +138,12 @@ class _PopularViewState extends State<PopularView> {
       // print("Error making POST request: $e");
     }
   }
+
   bool isLoading = true;
   @override
   void initState() {
     // TODO: implement initState
-    Future.delayed(Duration(seconds: 2), (){
+    Future.delayed(Duration(seconds: 2), () {
       setState(() {
         isLoading = false;
       });
@@ -155,246 +152,291 @@ class _PopularViewState extends State<PopularView> {
     getrentedData();
     super.initState();
   }
+
   @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: RentOutButton(),
-      body:
-      isLoading ? _buildShimmerEffect() :
-      RefreshIndicator(
-        onRefresh: () async {
-          await _refreshData();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 120,
-                width: MediaQuery.of(context).size.width,
-                child: CarouselSlider(
-                  items: images.asMap().entries.map((e)  {
-                    int index = e.key;
-                    String imagePath = e.value;
-                    String url = urls[index];
-                    return InkWell(
-                      onTap: (){
-                        launchUrl(Uri.parse(url));
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10.0,
-                              right: 10.0,
-                            ),
-                            child: Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width / 1.1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey,
-                                image: DecorationImage(
-                                  image: AssetImage(imagePath),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  options: CarouselOptions(
-                    autoPlay: true,
-                    aspectRatio: 2.0,
-                    onPageChanged: (index, _) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              rentedProducts.isEmpty
-                  ? Container(color: Colors.blue.shade100,)
-                  : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20, right: 10),
-                    child: Text(
-                      'My Rentals',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: AppColors.color1
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 120,
-                    child: Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: rentedProducts.length,
-                        itemBuilder: (context, index) {
-                          Map<String, dynamic> rentedItem =
-                          rentedProducts[index];
-                          DateTime startDate =
-                          DateTime.parse(rentedItem['start_date']);
-                          DateTime endDate =
-                          DateTime.parse(rentedItem['end_date']);
-                          DateTime now = DateTime.now();
-                          double progress = now.isBefore(endDate)
-                              ? now
-                              .difference(startDate)
-                              .inDays
-                              .toDouble() /
-                              endDate
-                                  .difference(startDate)
-                                  .inDays
-                                  .toDouble()
-                              : 1.0;
-                          return
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10.0,
-                                right: 10.0,
-                                bottom: 5.0,
-                              ),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  height: 105,
-                                  width: MediaQuery.of(context).size.width / 1.5,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      width: 0.5,
-                                      color: const Color.fromRGBO(
-                                        167,
-                                        167,
-                                        167,
-                                        0.51,
+      body: isLoading
+          ? _buildShimmerEffect()
+          : RefreshIndicator(
+              onRefresh: () async {
+                await _refreshData();
+              },
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 120,
+                      width: MediaQuery.of(context).size.width,
+                      child: CarouselSlider(
+                        items: images.asMap().entries.map((e) {
+                          int index = e.key;
+                          String imagePath = e.value;
+                          String url = urls[index];
+                          return InkWell(
+                            onTap: () {
+                              launchUrl(Uri.parse(url));
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10.0,
+                                    right: 10.0,
+                                  ),
+                                  child: Container(
+                                    height: 100,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.1,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.grey,
+                                      image: DecorationImage(
+                                        image: AssetImage(imagePath),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    borderRadius: BorderRadius.circular(15),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                        color: Color.fromRGBO(0, 106, 152, 0.25),
-                                      )
-                                    ],
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.all(2.0),
-                                          child: Text(
-                                            '${rentedProducts[index]['prod_id']['name']}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 12,
-                                              color: AppColors.color1
-                                            ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          onPageChanged: (index, _) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    rentedProducts.isEmpty
+                        ? Container(
+                            color: Colors.blue.shade100,
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 20, right: 10),
+                                child: Text(
+                                  'My Rentals',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: AppColors.color1),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 120,
+                                  child: Expanded(
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: rentedProducts.length,
+                                      itemBuilder: (context, index) {
+                                        Map<String, dynamic> rentedItem =
+                                            rentedProducts[index];
+                                        DateTime startDate = DateTime.parse(
+                                            rentedItem['start_date']);
+                                        DateTime endDate = DateTime.parse(
+                                            rentedItem['end_date']);
+                                        DateTime now = DateTime.now();
+                                        double progress = now.isBefore(endDate)
+                                            ? now
+                                                    .difference(startDate)
+                                                    .inDays
+                                                    .toDouble() /
+                                                endDate
+                                                    .difference(startDate)
+                                                    .inDays
+                                                    .toDouble()
+                                            : 1.0;
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10.0,
+                                            right: 10.0,
+                                            bottom: 5.0,
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 80,
-                                              child: Flexible(
-                                                child: endDate.difference(startDate).inDays == 0 ? Text('1 Days agreement',style: TextStyle(
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.red),)
-                                                    :Text('${endDate.difference(startDate).inDays}Days Agreement',
-                                                    style: TextStyle(
-                                                        fontSize: 8,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Colors.red),
-                                                    maxLines: 2,
-                                                    overflow:
-                                                    TextOverflow.ellipsis),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 80,
-                                              child: Flexible(
-                                                child: Text(
-                                                  '${rentedProducts[index]['time_left']}',
-                                                  style: TextStyle(
-                                                    fontSize: 8,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.red,
+                                          child: InkWell(
+                                            onTap: () {},
+                                            child: Container(
+                                              height: 105,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  1.5,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  width: 0.5,
+                                                  color: const Color.fromRGBO(
+                                                    167,
+                                                    167,
+                                                    167,
+                                                    0.51,
                                                   ),
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    offset: Offset(2, 2),
+                                                    blurRadius: 5,
+                                                    color: Color.fromRGBO(
+                                                        0, 106, 152, 0.25),
+                                                  )
+                                                ],
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(2.0),
+                                                      child: Text(
+                                                        '${rentedProducts[index]['prod_id']['name']}',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 12,
+                                                            color: AppColors
+                                                                .color1),
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: Flexible(
+                                                            child: endDate
+                                                                        .difference(
+                                                                            startDate)
+                                                                        .inDays ==
+                                                                    0
+                                                                ? Text(
+                                                                    '1 Days agreement',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            8,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400,
+                                                                        color: Colors
+                                                                            .red),
+                                                                  )
+                                                                : Text(
+                                                                    '${endDate.difference(startDate).inDays}Days Agreement',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            8,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400,
+                                                                        color: Colors
+                                                                            .red),
+                                                                    maxLines: 2,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: Flexible(
+                                                            child: Text(
+                                                              '${rentedProducts[index]['time_left']}',
+                                                              style: TextStyle(
+                                                                fontSize: 8,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color:
+                                                                    Colors.red,
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        top: 10.0,
+                                                        bottom: 10.0,
+                                                      ),
+                                                      child:
+                                                          LinearProgressIndicator(
+                                                        value: progress,
+                                                        backgroundColor:
+                                                            const Color
+                                                                .fromRGBO(
+                                                          217,
+                                                          217,
+                                                          217,
+                                                          1,
+                                                        ),
+                                                        color: const Color
+                                                            .fromRGBO(
+                                                          25,
+                                                          178,
+                                                          0,
+                                                          1,
+                                                        ),
+                                                        minHeight: 8.0,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                          Radius.circular(10),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 10.0,
-                                            bottom: 10.0,
                                           ),
-                                          child: LinearProgressIndicator(
-                                            value: progress,
-                                            backgroundColor: const Color.fromRGBO(
-                                              217,
-                                              217,
-                                              217,
-                                              1,
-                                            ),
-                                            color: const Color.fromRGBO(
-                                              25,
-                                              178,
-                                              0,
-                                              1,
-                                            ),
-                                            minHeight: 8.0,
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ),
-                              ),
-                            );
-                        },
+                                  )),
+                            ],
+                          ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 20, top: 10, bottom: 10.0),
+                      child: Text(
+                        'Popular',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: AppColors.color1),
                       ),
-                    )
-                  ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 20, top: 10, bottom: 10.0),
-                child: Text(
-                  'Popular',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16,color: AppColors.color1),
+                    ),
+                    _buildPopularProductsList(),
+                    const SizedBox(height: 100),
+                  ],
                 ),
               ),
-              _buildPopularProductsList(),
-              const SizedBox(height: 100),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -426,155 +468,129 @@ class _PopularViewState extends State<PopularView> {
 
   Widget _buildPopularProductsList() {
     // Return the actual list of popular products
-      return ListView.builder(
-          controller: scrollController,
-            itemCount: popularProducts.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 2, bottom: 2),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductDetails(
-                              iswishlist: '${popularProducts[index]['wishlist']}',
+    return ListView.builder(
+        controller: scrollController,
+        itemCount: popularProducts.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 2, bottom: 2),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductDetails(
+                              iswishlist:
+                                  '${popularProducts[index]['wishlist']}',
                               productId: '${popularProducts[index]['_id']}',
-                              createdUserId: '${popularProducts[index]['created_by']}',
+                              createdUserId:
+                                  '${popularProducts[index]['created_by']}',
                             )));
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(19),
-                              border: Border.all(
-                                  width: 0.5,
-                                  color: const Color.fromRGBO(
-                                      167, 167, 167, 0.51))),
-                          width:
-                          MediaQuery.of(context).size.width / 1.1,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        popularProducts[index]['image'] != null && popularProducts[index]['image'].isNotEmpty ? popularProducts[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+              },
+              child: Stack(
+                children: [
+                  Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(19),
+                          border: Border.all(
+                              width: 0.5,
+                              color:
+                                  const Color.fromRGBO(167, 167, 167, 0.51))),
+                      width: MediaQuery.of(context).size.width / 1.1,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(15),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    popularProducts[index]['image'] != null &&
+                                            popularProducts[index]['image']
+                                                .isNotEmpty
+                                        ? popularProducts[index]['image'][0]
+                                        : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
                                   ),
+                                  fit: BoxFit.cover,
                                 ),
-
                               ),
-                              const SizedBox(
-                                width: 20.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '₹ ${popularProducts[index]['price']}',
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight:
-                                              FontWeight.w500,
-                                              color: AppColors.color1,
-                                              letterSpacing: 1),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: AppColors.color1,
-                                              borderRadius:
-                                              BorderRadius.circular(
-                                                  18)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 9,
-                                                top: 2,
-                                                bottom: 2,
-                                                right: 9),
-                                            child: Text(
-                                              '${popularProducts[index]['time_period']}',
-                                              style: const TextStyle(
-                                                  fontWeight:
-                                                  FontWeight.w700,
-                                                  fontSize: 10,
-                                                  color: Color.fromRGBO(
-                                                      255,
-                                                      255,
-                                                      255,
-                                                      0.66),
-                                                  letterSpacing: 1.6),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Text(
+                                      '₹ ${popularProducts[index]['price']}',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.color1,
+                                          letterSpacing: 1),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: Text(
-                                        '${popularProducts[index]['name']}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 12,
-                                            color: Color.fromRGBO(
-                                                0, 0, 0, 0.66)),
-                                      ),
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.location_pin,
-                                          color: Colors.blue,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          '${popularProducts[index]['location']}',
-                                          style: const TextStyle(
-                                              fontWeight:
-                                              FontWeight.w400,
-                                              fontSize: 10,
-                                              color: Color.fromRGBO(
-                                                  0, 0, 0, 0.66)),
-                                        )
-                                      ],
-                                    )
+                                    RentTypeWidget(
+                                      listofProducts: popularProducts,
+                                      index: index,
+                                        renttype:"${popularProducts[index]['time_period']}"),
                                   ],
                                 ),
-                              ),
-                            ],
-                          )),
-                      // Text('${popularProducts}'),
-                      Positioned(
-                          top: 10,
-                          right: 10,
-                          child: popularProducts[index]
-                          ['wishlist'] ==
-                              true
-                              ? InkWell(
+                                Padding(
+                                  padding: const EdgeInsets.all(4),
+                                  child: Text(
+                                    '${popularProducts[index]['name']}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Color.fromRGBO(0, 0, 0, 0.66)),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.location_pin,
+                                      color: Colors.blue,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      '${popularProducts[index]['location']}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10,
+                                          color: Color.fromRGBO(0, 0, 0, 0.66)),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                  // Text('${popularProducts}'),
+                  Positioned(
+                      top: 10,
+                      right: 10,
+                      child: popularProducts[index]['wishlist'] == true
+                          ? InkWell(
                               onTap: () {
                                 setState(() {
                                   addtofavourite(
@@ -587,11 +603,11 @@ class _PopularViewState extends State<PopularView> {
                                 height: 24,
                                 width: 24,
                                 child: Image(
-                                  image: AssetImage(
-                                      'assets/icons/favourite.png'),
+                                  image:
+                                      AssetImage('assets/icons/favourite.png'),
                                 ),
                               ))
-                              : InkWell(
+                          : InkWell(
                               onTap: () {
                                 setState(() {
                                   addtofavourite(
@@ -608,11 +624,11 @@ class _PopularViewState extends State<PopularView> {
                                       'assets/icons/unfavourite.png'),
                                 ),
                               ))),
-                    ],
-                  ),
-                ),
-              );
-            });
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 

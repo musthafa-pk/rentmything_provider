@@ -5,6 +5,7 @@ import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/RentTypeWidget.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
 
@@ -121,28 +122,13 @@ class _OngoingAdsState extends State<OngoingAds> {
                                                   style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight: FontWeight.w500,
+                                                      color: AppColors.color1,
                                                       letterSpacing: 1),
                                                 ),
                                                 const SizedBox(
                                                   width: 10,
                                                 ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      color: AppColors.color1,
-                                                      borderRadius: BorderRadius.circular(18)),
-                                                  child: const Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 9, top: 2, bottom: 2, right: 9),
-                                                    child: Text(
-                                                      'Daily',
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight.w700,
-                                                          color:
-                                                          Color.fromRGBO(255, 255, 255, 0.66),
-                                                          letterSpacing: 2),
-                                                    ),
-                                                  ),
-                                                ),
+                                                RentTypeWidget(listofProducts: myposts, index: index, renttype: myposts[index]['time_period']),
                                                 const SizedBox(
                                                   width: 60,
                                                 ),

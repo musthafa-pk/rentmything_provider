@@ -8,11 +8,14 @@ import 'package:rentmything/res/app_url.dart';
 
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/res/components/districtTyper.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
+
+import '../../res/components/myButton.dart';
 
 class RentOutElectronics extends StatefulWidget {
   String category;
@@ -130,11 +133,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
+        leading: AppBarBackButton(),
         title: Text('${widget.subcategory} Details',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
       ),
       body: SafeArea(
@@ -150,13 +149,15 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                     const SizedBox(height: 10,),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: Text('Add Photo',style: TextStyle(
+                        color: AppColors.color1,
+                          fontWeight: FontWeight.w400,fontSize: 14),),
                     ),
                     SizedBox(
                         height: 100,
                         // width: MediaQuery.of(context).size.width/1.1,
                         child: ImagesPicker()),
-                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     SizedBox(height: 10,),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -168,6 +169,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: brand,
                         focusNode: brandNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, brandNode, yearNode);
                         },
@@ -186,7 +188,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Model',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Model',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -197,6 +199,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: year,
                         focusNode: yearNode,
+                        style: TextStyle(color: AppColors.color1),
                         keyboardType: TextInputType.number,
                         validator: (v){
                           Util.fieldFocusChange(context, yearNode,km_drivernNode);
@@ -223,7 +226,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Year of use',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Years of use',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -234,6 +237,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: km_driven,
                         focusNode: km_drivernNode,
+                        style: TextStyle(color: AppColors.color1),
                         keyboardType: TextInputType.number,
                         validator: (v){
                           if(v == null || v.isEmpty){
@@ -252,7 +256,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -263,6 +267,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: title,
                         focusNode: titleNode,
+                        style: TextStyle(color: AppColors.color1),
                         validator: (v){
 
                         },
@@ -278,7 +283,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       height: 90,
@@ -290,6 +295,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: description,
                         focusNode: descriptionNode,
+                        style: TextStyle(color: AppColors.color1),
                         maxLength: 399,
                         maxLines: 4,
                         onFieldSubmitted: (v){
@@ -304,7 +310,9 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Time Period & Price'),
+                      child: const Text('Time Period & Price',style: TextStyle(
+                        color: AppColors.color1
+                      ),),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -315,10 +323,11 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                             child: Container(
                                 width: MediaQuery.of(context).size.width/1.1,
                                 decoration: BoxDecoration(
-                                    color: AppColors.color1,
+                                    color:  Color.fromRGBO(7, 59, 76, 0.18),
                                     borderRadius: BorderRadius.circular(6)
                                 ),
-                                child: CustomDropdown(options: const ['Daily','Monthly','Hourly'],
+                                child: CustomDropdown(
+                                  options: const ['Daily','Monthly','Hourly'],
                                   onChanged: (value) {
                                     setState(() {
                                       timePeriod = value.toString();
@@ -337,6 +346,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                                   child: TextFormField(
                                     controller: price,
                                     focusNode: priceNode,
+                                    style: TextStyle(color: AppColors.color1),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -362,7 +372,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -373,6 +383,7 @@ class _RentOutElectronicsState extends State<RentOutElectronics> {
                       child: TextFormField(
                         controller: location,
                         focusNode: locaitonNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){},
                         validator: (v){
                           validator: (value) {

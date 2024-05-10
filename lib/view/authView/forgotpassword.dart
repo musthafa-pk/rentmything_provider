@@ -10,6 +10,8 @@ import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/bottomNavigationPage.dart';
 import 'package:rentmything/view/splashView/successView.dart';
+
+import '../../res/components/myButton.dart';
 class Forgotpassword extends StatefulWidget {
   const Forgotpassword({super.key});
 
@@ -112,7 +114,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Email',style: TextStyle(fontFamily: 'Poppins'),),
+                  const Text('Email',style: TextStyle(fontFamily: 'Poppins',color: AppColors.color1),),
                   const SizedBox(height: 10,),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.1,
@@ -121,7 +123,7 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: TextFormField(
-                      controller: email,
+                      controller: email,style: TextStyle(color: AppColors.color1),
                       focusNode: emailNode,
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -152,12 +154,13 @@ class _ForgotpasswordState extends State<Forgotpassword> {
                     }
                   }),
                   SizedBox(height: 20,),
-                  Text('Enter OTP',style: TextStyle(fontFamily: 'Poppins'),),
+                  Text('Enter OTP',style: TextStyle(fontFamily: 'Poppins',color: AppColors.color1),),
                   Container(
                     width: MediaQuery.of(context).size.width/1.1,
                     child: OtpTextField(
                       numberOfFields: 6,
                       fillColor: Colors.black.withOpacity(0.1),
+                      textStyle: TextStyle(color: AppColors.color1),
                       filled: true,
                       keyboardType: TextInputType.number,
                       focusedBorderColor: AppColors.color1,

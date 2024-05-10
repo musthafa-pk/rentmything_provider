@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentmything/res/app_colors.dart';
 
 class CustomDropdown extends StatefulWidget {
   final List<String> options;
@@ -41,7 +42,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
             value: option,
             child: Text(
               option,
-              style: const TextStyle(color: Colors.black), // Set the dropdown menu item text color to black
+              style: const TextStyle(color: AppColors.color1), // Set the dropdown menu item text color to black
             ),
           );
         }).toList(),

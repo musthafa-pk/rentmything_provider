@@ -16,8 +16,8 @@ class Tools extends StatefulWidget {
 
 class _ToolsState extends State<Tools> {
 
-  List<dynamic> listofelectronics = [];
-  Future<dynamic> getmachineries() async {
+  List<dynamic> listoftools = [];
+  Future<dynamic> gettools() async {
     Map<String, dynamic> data = {
       "category":widget.category
     };
@@ -40,8 +40,8 @@ class _ToolsState extends State<Tools> {
         var responseData = jsonDecode(response.body);
         print(responseData);
         setState(() {
-          listofelectronics.clear();
-          listofelectronics.addAll(responseData['data']);
+          listoftools.clear();
+          listoftools.addAll(responseData['data']);
         });
         // Return the decoded response data
         return responseData;
@@ -59,7 +59,7 @@ class _ToolsState extends State<Tools> {
   @override
   void initState() {
     // TODO: implement initState
-    getmachineries();
+    gettools();
     super.initState();
   }
 
@@ -71,16 +71,16 @@ class _ToolsState extends State<Tools> {
           // Text('${vehiclescategory}'),
           Expanded(
               child: ListView.builder(
-                itemCount:listofelectronics.length,
+                itemCount:listoftools.length,
                 itemBuilder: (context, index) {
                   return Center(
                     child:
-                    listofelectronics.length == 0 ? Text('NO Data') :
+                    listoftools.length == 0 ? Text('NO Data') :
                     InkWell(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(
-                          productId: '${listofelectronics[index]['_id']}',
-                          createdUserId: '${listofelectronics[index]['created_by']}',)));
+                          productId: '${listoftools[index]['_id']}',
+                          createdUserId: '${listoftools[index]['created_by']}',)));
                       },
                       child: Stack(
                         children: [
@@ -104,7 +104,7 @@ class _ToolsState extends State<Tools> {
                                         borderRadius: BorderRadius.circular(15),
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            listofelectronics[index]['image'] != null && listofelectronics[index]['image'].isNotEmpty ? listofelectronics[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                            listoftools[index]['image'] != null && listoftools[index]['image'].isNotEmpty ? listoftools[index]['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -123,7 +123,7 @@ class _ToolsState extends State<Tools> {
                                         Row(
                                           children: [
                                             Text(
-                                              '₹ ${listofelectronics[index]['price']}',
+                                              '₹ ${listoftools[index]['price']}',
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
@@ -140,7 +140,7 @@ class _ToolsState extends State<Tools> {
                                                 padding: const EdgeInsets.only(
                                                     left: 9, top: 2, bottom: 2, right: 9),
                                                 child: Text(
-                                                  '${listofelectronics[index]['subtype1']}',
+                                                  '${listoftools[index]['subtype1']}',
                                                   style: const TextStyle(
                                                       fontWeight: FontWeight.w700,
                                                       fontSize: 10,
@@ -153,7 +153,7 @@ class _ToolsState extends State<Tools> {
                                           ],
                                         ),
                                         Padding(padding: const EdgeInsets.all(4),
-                                          child: Text('${listofelectronics[index]['name']}',style: const TextStyle(fontWeight: FontWeight.w400,
+                                          child: Text('${listoftools[index]['name']}',style: const TextStyle(fontWeight: FontWeight.w400,
                                               fontSize: 12,
                                               color: Color.fromRGBO(0, 0, 0, 0.66)),),),
                                         Row(
@@ -164,7 +164,7 @@ class _ToolsState extends State<Tools> {
                                               size: 16,
                                             ),
                                             const SizedBox(width: 10,),
-                                            Text('${listofelectronics[index]['location']}',style: const TextStyle(fontWeight: FontWeight.w400,
+                                            Text('${listoftools[index]['location']}',style: const TextStyle(fontWeight: FontWeight.w400,
                                                 fontSize: 10,
                                                 color: Color.fromRGBO(0, 0, 0, 0.66)),)
                                           ],
@@ -177,7 +177,7 @@ class _ToolsState extends State<Tools> {
                           Positioned(
                               top: 10,
                               right: 10,
-                              child:listofelectronics[index]['rent_status'] == false ? InkWell(
+                              child:listoftools[index]['rent_status'] == false ? InkWell(
                                 onTap: (){
                                   // addtofavourite('${snapshot.data['data'][index]['_id']}', context);
                                 },

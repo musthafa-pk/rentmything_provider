@@ -78,7 +78,8 @@ class _SignUpState extends State<SignUp> {
       if (response.statusCode == 200) {
         // var responseData = jsonDecode(response.body);
         print('API request successful');
-        // print(responseData);
+        // print
+        // (responseData);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -198,6 +199,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                           controller: fullName,
                           maxLength: 35,
+                          style: TextStyle(color: AppColors.color1),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your full name';
@@ -223,6 +225,7 @@ class _SignUpState extends State<SignUp> {
                           focusNode: phoneNumberNode,
                           keyboardType: TextInputType.number,
                           maxLength: 10,
+                            style: TextStyle(color: AppColors.color1),
                           decoration: const InputDecoration(
                             counterText: '',
                             border: InputBorder.none,
@@ -259,6 +262,7 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           controller: email,
                           focusNode: emailNode,
+                          style: TextStyle(color: AppColors.color1),
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.only(left: 10),
@@ -291,6 +295,7 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           controller: password,
                           focusNode: passwordNode,
+                          style: TextStyle(color: AppColors.color1),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             contentPadding: const EdgeInsets.only(left: 10,top: 10),
@@ -334,6 +339,7 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           controller: confirmPassword,
                           focusNode: confirmPasswordNode,
+                          style: TextStyle(color: AppColors.color1),
                           maxLength: 15,
                           decoration: InputDecoration(
                             border: InputBorder.none,

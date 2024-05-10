@@ -6,6 +6,7 @@ import 'package:rentmything/res/app_url.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/view/chatView/buyyingChat.dart';
+import 'package:rentmything/view/chatView/veiw_chat.dart';
 
 class ListofChats extends StatefulWidget {
   const ListofChats({Key? key}) : super(key: key);
@@ -40,6 +41,7 @@ class _ListofChatsState extends State<ListofChats> {
       );
 
       if (response.statusCode == 200) {
+        print('chat list is:${response.body}');
         dynamic responseData = jsonDecode(response.body);
         return responseData['chats'];
       } else {
@@ -74,12 +76,23 @@ class _ListofChatsState extends State<ListofChats> {
               );
             } else if (snapshot.hasData) {
               List<dynamic> chatList = snapshot.data!;
-              return ListView
-                  .builder(
+              return ListView.builder(
                 itemCount: chatList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
+                      print('product id:${chatList[index]['prod_id']['_id']}');
+                      print('sender id:${Util.userId}');
+                      print('reciver id:${Util.userId == chatList[index]['sender_id']
+                          ? '${chatList[index]['receiver_id']}'
+                          : '${chatList[index]['sender_id']}'}');
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) =>ViewChat(
+                      //     senderId: Util.userId!,
+                      //     productId: chatList[index]['prod_id']['_id'],
+                      //     receiverId:  Util.userId == chatList[index]['sender_id']
+                      //             ? '${chatList[index]['receiver_id']}'
+                      //             : '${chatList[index]['sender_id']}'
+                      // )));
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -88,7 +101,7 @@ class _ListofChatsState extends State<ListofChats> {
                                 ? '${chatList[index]['receiver_name']}'
                                 : '${chatList[index]['sender_name']}',
                             senderId: Util.userId!,
-                            productId: chatList[index]['prod_id'],
+                            productId: chatList[index]['prod_id']['_id'],
                             reciverId: Util.userId == chatList[index]['sender_id']
                                 ? '${chatList[index]['receiver_id']}'
                                 : '${chatList[index]['sender_id']}',
@@ -134,6 +147,7 @@ class _ListofChatsState extends State<ListofChats> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           letterSpacing: 1,
+                                          color: AppColors.color1,
                                           fontFamily: 'Poppins',
                                         ),
                                       ),
@@ -145,12 +159,16 @@ class _ListofChatsState extends State<ListofChats> {
                                           CircleAvatar(
                                             radius: 20,
                                             backgroundColor: AppColors.color1,
+                                            backgroundImage: NetworkImage('${chatList[index]['image']}'),
                                             child: Text(
                                               '${Util.userId == chatList[index]['sender_id'] ? '${chatList[index]['receiver_name'].toString().substring(0, 1)}' : '${chatList[index]['sender_name'].toString().substring(0, 1)}'}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 14,
                                                 letterSpacing: 1,
+
+
+
                                                 color: Colors.white,
                                               ),
                                             ),
@@ -167,10 +185,11 @@ class _ListofChatsState extends State<ListofChats> {
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 14,
+                                                    color: AppColors.color1,
                                                     letterSpacing: 1,
                                                   ),
                                                 ),
-                                                Text('${chatList[index]['message']}'),
+                                                Text('${chatList[index]['message']}',style: TextStyle(color: AppColors.color1),),
                                               ],
                                             ),
                                           ),

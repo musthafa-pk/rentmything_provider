@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:rentmything/main.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/notificationView/notificationcontroller.dart';
 
@@ -20,6 +22,8 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   List<dynamic> notificaitonlist = [];
+
+
 
 
   Future<dynamic> getnotification() async {
@@ -66,6 +70,7 @@ class _NotificationPageState extends State<NotificationPage> {
         if (notifications.length > notificaitonlist.length) {
           // Trigger another function when new data is received
           handleNewData('New Notification','Rent my thing has a new notification');
+
           // Update the notificationList with new notifications
           setState(() {
             notificaitonlist.clear();
@@ -130,13 +135,13 @@ class _NotificationPageState extends State<NotificationPage> {
       print('Error: $e');
     }
   }
-  void _showNotificationPopup(String Message) {
+  void _showNotificationPopup(Message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Notification Details"),
-          content: Text('${Message}'),
+          content: Text('$Message'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -151,12 +156,13 @@ class _NotificationPageState extends State<NotificationPage> {
   }
   @override
   void initState() {
+    AwesomeNotifications().isNotificationAllowed();
     getnotification();
     checkForNewNotifications();
     // TODO: implement initState
     super.initState();
   }
-  void handleNewData(String title,String message) {
+  void handleNewData(title,message) {
     // Your code to handle new data
    NotificationController.createNewNotification(title,message);
   }
@@ -171,12 +177,7 @@ class _NotificationPageState extends State<NotificationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_circle_left_rounded, color: AppColors.color1),
-        ),
+        leading: AppBarBackButton(),
       ),
       body: RefreshIndicator(
         onRefresh: getnotification,
@@ -218,6 +219,9 @@ class _NotificationPageState extends State<NotificationPage> {
                                   Expanded(
                                     child: Text(
                                       '${notificaitonlist[index]['message']}',
+                                      style: TextStyle(
+                                        color: AppColors.color1
+                                      ),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                     ),
@@ -241,7 +245,12 @@ class _NotificationPageState extends State<NotificationPage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(notificaitonlist[index]['createdAt']))}'),
+                                    // ElevatedButton(onPressed: (){
+                                    //   handleNewData('Rent My Thing', '${notificaitonlist[int.parse(notificaitonlist.length.toString())]['message']}');
+                                    // }, child: Text('Press')),
+                                    Text('${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(notificaitonlist[index]['createdAt']))}',style: TextStyle(
+                                      color: AppColors.color1
+                                    ),),
                                     SizedBox(width: 10),
                                     notificaitonlist[index]['read'] == 'N' ? Icon(Icons.mark_chat_unread, color: Colors.green, size: 18) : Icon(Icons.mark_chat_read_outlined, color: Colors.green, size: 18),
                                   ],

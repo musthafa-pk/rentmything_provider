@@ -1,10 +1,12 @@
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rentmything/main.dart';
+import 'package:rentmything/res/app_colors.dart';
 
 class NotificationController {
 
@@ -151,53 +153,42 @@ class NotificationController {
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: Text('Get Notified!',
-                style: Theme.of(context).textTheme.titleLarge),
+                style: TextStyle(
+                  color: AppColors.color1
+                )),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          child: Lottie.asset('assets/lottie/animated-bell.gif')),
-                      // child: Image.asset(
-                      //   'assets/images/animated-bell.gif',
-                      //   height: MediaQuery.of(context).size.height * 0.3,
-                      //   fit: BoxFit.fitWidth,
-                      // ),
-                    ),
+                    SizedBox(
+                        child: Lottie.asset('assets/lottie/notificationbell_anime.json')),
                   ],
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                    'Allow Rent my thing send you notifications!'),
+                    'Allow Rent my thing send you notifications!',style: TextStyle(color: AppColors.color1),),
               ],
             ),
             actions: [
               TextButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.color1
+                ),
                   onPressed: () {
                     Navigator.of(ctx).pop();
                   },
-                  child: Text(
-                    'Deny',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.red),
-                  )),
+                  child:Text('Deny',style: TextStyle(color: Colors.white),)),
               TextButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.color1
+                ),
                   onPressed: () async {
                     userAuthorized = true;
                     Navigator.of(ctx).pop();
                   },
-                  child: Text(
-                    'Allow',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.deepPurple),
-                  )),
+                  child: Text('Allow',style: TextStyle(color:Colors.white),)),
             ],
           );
         });
@@ -230,11 +221,11 @@ class NotificationController {
         content: NotificationContent(
             id: -1, // -1 is replaced by a random number
             channelKey: 'alerts',
-            title: '${title}Huston! The eagle has landed!',
+            title: '${title}',
             body:
-            "${message}A small step for a man, but a giant leap to Flutter's community!",
-            bigPicture: 'https://storage.googleapis.com/cms-storage-bucket/d406c736e7c4c57f5f61.png',
-            largeIcon: 'https://storage.googleapis.com/cms-storage-bucket/0dbfcc7a59cd1cf16282.png',
+            "${message}",
+            // bigPicture: 'https://thumbs2.imgbox.com/77/cb/CvfneOVO_t.png',
+            largeIcon: 'https://thumbs2.imgbox.com/77/cb/CvfneOVO_t.png',
             //'asset://assets/images/balloons-in-sky.jpg',
             notificationLayout: NotificationLayout.BigPicture,
             payload: {'notificationId': '1234567890'}),

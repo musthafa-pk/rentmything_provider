@@ -29,12 +29,12 @@ class _MyAdsViewState extends State<MyAdsView> {
         length: _addTabs.length,
         child: Scaffold(
             appBar: AppBar(
-              title: const Center(child: Text('My Ads')),
+              title: Text('My Ads',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),),
               leading: InkWell(
                   onTap: (){
                     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const BottomNavigationPage()));
                   },
-                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
+                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,size: 35,)),
               bottom: TabBar(tabs: _addTabs,
                 labelColor: AppColors.color1,
                 indicatorColor: AppColors.color1,),

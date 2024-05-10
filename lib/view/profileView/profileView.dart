@@ -215,16 +215,18 @@ class _ProfileViewState extends State<ProfileView> {
                                             title: Row(
                                               children: [
                                                 Icon(Icons.info,color: AppColors.color1,),
-                                                Text("Info"),
+                                                Text("Info",style: TextStyle(color: AppColors.color1),),
                                               ],
                                             ),
-                                            content: Text("Show this code to add rent data!"),
+                                            content: Text("Show this code to add rent data!",style: TextStyle(
+                                              color: AppColors.color1
+                                            ),),
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: Text("Close"),
+                                                child: Text("Close",style: TextStyle(color: AppColors.color1),),
                                               ),
                                             ],
                                           );

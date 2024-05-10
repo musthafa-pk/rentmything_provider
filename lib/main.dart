@@ -1,18 +1,12 @@
-import 'dart:async';
-import 'dart:isolate';
+
 import 'dart:ui';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/utils/routes/route_names.dart';
 import 'package:rentmything/utils/routes/routes.dart';
-import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/notificationView/notificationcontroller.dart';
 import 'package:rentmything/view_model/auth_view_model.dart';
 import 'package:rentmything/view_model/user_view_model.dart';
@@ -64,7 +58,6 @@ class MyApp extends StatelessWidget {
           ).copyWith(
               textTheme: ThemeData.dark().textTheme.apply(
                   fontFamily: 'Poppins',
-
               )
           ),
           initialRoute: RoutesName.splash,

@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rentmything/res/app_colors.dart';
 
@@ -11,11 +9,14 @@ import 'package:rentmything/res/app_url.dart';
 
 
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/res/components/FuelTypeWIdget.dart';
 import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
+
+import '../../res/components/myButton.dart';
 
 class RentOutVehicle extends StatefulWidget {
   String category;
@@ -148,11 +149,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
+        leading:AppBarBackButton(),
         title: Text('${widget.subcategory} Details',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
       ),
       body: SafeArea(
@@ -168,13 +165,13 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                     const SizedBox(height: 10,),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     SizedBox(
                       height: 100,
                         // width: MediaQuery.of(context).size.width/1.1,
                         child: ImagesPicker()),
-                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     SizedBox(height: 10,),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -186,6 +183,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: brand,
                         focusNode: brandNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, brandNode, yearNode);
                         },
@@ -204,7 +202,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Year',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Year',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -216,6 +214,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                         controller: year,
                         keyboardType: TextInputType.number,
                         focusNode: yearNode,
+                        style: TextStyle(color: AppColors.color1),
                         validator: (v){
                           Util.fieldFocusChange(context, yearNode,km_drivernNode);
                         },
@@ -231,7 +230,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Fuel Type'),
+                      child: const Text('Fuel Type',style: TextStyle(color: AppColors.color1),),
                     ),
                     FuelType(onFuelTypeSelected: (fuelType){
                       setState(() {
@@ -241,7 +240,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Km Driven',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Km Driven',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -252,6 +251,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: km_driven,
                         focusNode: km_drivernNode,
+                        style: TextStyle(color: AppColors.color1),
                         keyboardType: TextInputType.number,
                         validator: (v){
                           if(v == null || v.isEmpty){
@@ -270,7 +270,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -281,6 +281,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: title,
                         focusNode: titleNode,
+                        style: TextStyle(color: AppColors.color1),
                         validator: (v){
 
                         },
@@ -296,7 +297,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       height: 90,
@@ -308,6 +309,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: description,
                         focusNode: descriptionNode,
+                        style: TextStyle(color: AppColors.color1),
                         maxLength: 399,
                         maxLines: 4,
                         onFieldSubmitted: (v){
@@ -322,7 +324,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Time Period & Price'),
+                      child: const Text('Time Period & Price',style: TextStyle(color: AppColors.color1),),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -332,10 +334,10 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                             child: Container(
                                 width: MediaQuery.of(context).size.width/1.1,
                                 decoration: BoxDecoration(
-                                    color: AppColors.color1,
+                                    color: const Color.fromRGBO(7, 59,76, 0.18),
                                     borderRadius: BorderRadius.circular(6)
                                 ),
-                                child: CustomDropdown(options: const ['Daily','Monthly','Hourly'],
+                                child: CustomDropdown(options: const ['Daily','Monthly','Hourly','Yearly'],
                                   onChanged: (value) {
                                     setState(() {
                                       timePeriod = value.toString();
@@ -347,12 +349,14 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                             child: Column(
                               children: [
                                 Container(
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(7, 59, 76, 0.18)
+                                  decoration:  BoxDecoration(
+                                      color: Color.fromRGBO(7, 59, 76, 0.18),
+                                    borderRadius: BorderRadius.circular(6)
                                   ),
                                   child: TextFormField(
                                     controller: price,
                                     focusNode: priceNode,
+                                    style: TextStyle(color: AppColors.color1),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -378,7 +382,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -389,6 +393,7 @@ class _RentOutVehicleState extends State<RentOutVehicle> {
                       child: TextFormField(
                         controller: location,
                         focusNode: locaitonNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){},
                         validator: (v){
                           validator: (value) {

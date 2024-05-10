@@ -109,29 +109,29 @@ class _SettingsState extends State<Settings> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 30),
-              Text(
-                'Display',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  color: AppColors.color1
-                ),
-              ),
+              // Text(
+              //   'Display',
+              //   style: TextStyle(
+              //       fontSize: 18,
+              //       fontWeight: FontWeight.bold,
+              //     color: AppColors.color1
+              //   ),
+              // ),
               SizedBox(height: 20),
-              CupertinoFormRow(
-                child: Text('Dark Mode',style: TextStyle(color: AppColors.color1),),
-                prefix: CupertinoSwitch(
-                  value: _isDarkMode,
-                  onChanged: (value) {
-                    setState(() {
-                      _isDarkMode = value;
-                      context.read<ThemeProvider>().isDarkMode = value;
-                      _saveThemePreference(value);
-                    });
-                  },
-                ),
-              ),
-              Divider(),
+              // CupertinoFormRow(
+              //   child: Text('Dark Mode',style: TextStyle(color: AppColors.color1),),
+              //   prefix: CupertinoSwitch(
+              //     value: _isDarkMode,
+              //     onChanged: (value) {
+              //       setState(() {
+              //         _isDarkMode = value;
+              //         context.read<ThemeProvider>().isDarkMode = value;
+              //         _saveThemePreference(value);
+              //       });
+              //     },
+              //   ),
+              // ),
+              // Divider(),
               SizedBox(height: 20),
               Text(
                 'Account',

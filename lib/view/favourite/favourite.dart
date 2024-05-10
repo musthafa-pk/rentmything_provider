@@ -140,11 +140,11 @@ class _FavouritePageState extends State<FavouritePage> {
                                 padding: const EdgeInsets.all(2.5),
                                 child: InkWell(
                                   onTap: (){
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(
-                                    //   // productDetails: favoritelist,
-                                    //   productId: '${favoritelist['data'][index]['prod_id']['_id']}',
-                                    //   createdUserId: '${favoritelist['data'][index]['user_id']['_id']}',
-                                    // )));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(
+                                      // productDetails: favoritelist,
+                                      productId: '${favoritelist['data'][index]['prod_id']['_id']}',
+                                      createdUserId: '${favoritelist['data'][index]['user_id']['_id']}',
+                                    )));
                                   },
                                   child: Stack(
                                     children: [
@@ -164,11 +164,15 @@ class _FavouritePageState extends State<FavouritePage> {
                                                   height: 80,
                                                   width: 80,
                                                   decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      borderRadius: BorderRadius.circular(15),
-                                                      image: const DecorationImage(
-                                                          image: AssetImage('assets/images/van.jpg'),
-                                                          fit: BoxFit.cover)),
+                                                    color: Colors.black,
+                                                    borderRadius: BorderRadius.circular(15),
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                        favoritelist['data'][index]['prod_id']['image'] != null && favoritelist['data'][index]['prod_id']['image'].isNotEmpty ? favoritelist['data'][index]['prod_id']['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 ),),
                                               const SizedBox(
                                                 width: 20.0,

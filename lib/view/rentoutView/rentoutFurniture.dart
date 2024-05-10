@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/res/components/ImagesPicker.dart';
 import 'package:rentmything/res/components/customDropdown.dart';
 import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/splashView/successView.dart';
+
+import '../../res/components/myButton.dart';
 
 class RentOutFurniture extends StatefulWidget {
   String category;
@@ -126,11 +129,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_circle_left_rounded,color: AppColors.color1,)),
+        leading: AppBarBackButton(),
         title: Text('${widget.subcategory} Details',
           style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
       ),
@@ -147,13 +146,13 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                     const SizedBox(height: 10,),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: Text('Add Photo',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     SizedBox(
                         height: 100,
                         // width: MediaQuery.of(context).size.width/1.1,
                         child: ImagesPicker()),
-                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                    const Text('Brand',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     SizedBox(height: 10,),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -165,6 +164,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                       child: TextFormField(
                         controller: brand,
                         focusNode: brandNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){
                           Util.fieldFocusChange(context, brandNode, yearNode);
                         },
@@ -219,7 +219,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Year of use',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Year of use',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -231,6 +231,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                         controller: km_driven,
                         focusNode: km_drivernNode,
                         keyboardType: TextInputType.number,
+                        style: TextStyle(color: AppColors.color1),
                         validator: (v){
                           if(v == null || v.isEmpty){
                             return 'Please enter the year of use';
@@ -254,7 +255,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                          children: [
                            Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: const Text('Length',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                             child: const Text('Length',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                            ),
                            Container(
                              width: MediaQuery.of(context).size.width/3.5,
@@ -265,6 +266,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                              child: TextFormField(
                                controller: length,
                                focusNode: lengthNode,
+                               style: TextStyle(color: AppColors.color1),
                                keyboardType: TextInputType.number,
                                validator: (v){
                                  if(v == null || v.isEmpty){
@@ -287,7 +289,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                          children: [
                            Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: const Text('Width',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                             child: const Text('Width',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                            ),
                            Container(
                              width: MediaQuery.of(context).size.width/3.5,
@@ -298,6 +300,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                              child: TextFormField(
                                controller: width,
                                focusNode: widthNode,
+                               style: TextStyle(color: AppColors.color1),
                                keyboardType: TextInputType.number,
                                validator: (v){
                                  if(v == null || v.isEmpty){
@@ -320,7 +323,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                          children: [
                            Padding(
                              padding: const EdgeInsets.all(8.0),
-                             child: const Text('Height',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                             child: const Text('Height',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                            ),
                            Container(
                              width: MediaQuery.of(context).size.width/3.5,
@@ -331,6 +334,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                              child: TextFormField(
                                controller: height,
                                focusNode: heightNode,
+                               style: TextStyle(color: AppColors.color1),
                                keyboardType: TextInputType.number,
                                validator: (v){
                                  if(v == null || v.isEmpty){
@@ -353,7 +357,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Ad Title',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -364,6 +368,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                       child: TextFormField(
                         controller: title,
                         focusNode: titleNode,
+                        style: TextStyle(color: AppColors.color1),
                         validator: (v){
 
                         },
@@ -379,7 +384,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Description',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       height: 90,
@@ -391,6 +396,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                       child: TextFormField(
                         controller: description,
                         focusNode: descriptionNode,
+                        style: TextStyle(color: AppColors.color1),
                         maxLength: 399,
                         maxLines: 4,
                         onFieldSubmitted: (v){
@@ -405,7 +411,9 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Time Period & Price'),
+                      child: const Text('Time Period & Price',style: TextStyle(
+                      color: AppColors.color1
+                      ),),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -416,7 +424,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                             child: Container(
                                 width: MediaQuery.of(context).size.width/1.1,
                                 decoration: BoxDecoration(
-                                    color: AppColors.color1,
+                                    color: Color.fromRGBO(7, 59,76, 0.18),
                                     borderRadius: BorderRadius.circular(6)
                                 ),
                                 child: CustomDropdown(
@@ -439,6 +447,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                                   child: TextFormField(
                                     controller: price,
                                     focusNode: priceNode,
+                                    style: TextStyle(color: AppColors.color1),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -464,7 +473,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14),),
+                      child: const Text('Location',style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: AppColors.color1),),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width/1.1,
@@ -475,6 +484,7 @@ class _RentOutFurnitureState extends State<RentOutFurniture> {
                       child: TextFormField(
                         controller: location,
                         focusNode: locaitonNode,
+                        style: TextStyle(color: AppColors.color1),
                         onFieldSubmitted: (v){},
                         validator: (v){
                           validator: (value) {

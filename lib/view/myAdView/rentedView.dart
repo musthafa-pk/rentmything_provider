@@ -209,6 +209,7 @@ class _RentedItemsState extends State<RentedItems> {
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
+                                            color: AppColors.color1,
                                             letterSpacing: 1),
                                       ),
                                       const SizedBox(

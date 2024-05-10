@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:rentmything/res/components/RentTypeWidget.dart';
 import 'package:rentmything/view/productDetailsView/productdetailsView.dart';
 
 class Machineries extends StatefulWidget {
@@ -75,7 +76,7 @@ class _MachineriesState extends State<Machineries> {
                 itemBuilder: (context, index) {
                   return Center(
                     child:
-                    listofelectronics.length == 0 ? Text('NO Data') :
+                    listofelectronics.length == 0 ? Center(child: Text('NO Data',style: TextStyle(color: AppColors.color1),)) :
                     InkWell(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductDetails(
@@ -127,29 +128,13 @@ class _MachineriesState extends State<Machineries> {
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
+                                                  color: AppColors.color1,
                                                   letterSpacing: 1),
                                             ),
                                             const SizedBox(
                                               width: 10,
                                             ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.color1,
-                                                  borderRadius: BorderRadius.circular(18)),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 9, top: 2, bottom: 2, right: 9),
-                                                child: Text(
-                                                  '${listofelectronics[index]['subtype1']}',
-                                                  style: const TextStyle(
-                                                      fontWeight: FontWeight.w700,
-                                                      fontSize: 10,
-                                                      color:
-                                                      Color.fromRGBO(255, 255, 255, 0.66),
-                                                      letterSpacing: 1.6),
-                                                ),
-                                              ),
-                                            ),
+                                            RentTypeWidget(listofProducts: listofelectronics, index: index, renttype: listofelectronics[index]['time_period']),
                                           ],
                                         ),
                                         Padding(padding: const EdgeInsets.all(4),

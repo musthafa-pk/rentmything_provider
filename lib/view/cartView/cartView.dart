@@ -34,8 +34,8 @@ class _CartviewState extends State<Cartview> {
                   onTap: (){
                     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> const BottomNavigationPage()));
                   },
-                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,)),
-              title: const Center(child: Text('My Cart',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),)),
+                  child: const Icon(Icons.arrow_circle_left,color: AppColors.color1,size: 35,)),
+              title: Text('My Rent',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 14),),
               bottom: TabBar(tabs: _cartTabs,
                 labelColor: AppColors.color1,
                 indicatorColor: AppColors.color1,

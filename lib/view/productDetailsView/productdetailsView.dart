@@ -20,6 +20,7 @@ import 'package:rentmything/view/bottomNavigationPage.dart';
 import 'package:rentmything/view/chatView/buyyingChat.dart';
 import 'package:rentmything/view/chatView/chatView.dart';
 import 'package:rentmything/view/productDetailsView/qrcode_scanner.dart';
+import 'package:rentmything/view/profileView/profileview_of_customer/profile_with_products.dart';
 import 'package:rentmything/view/rentoutView/markingasrented.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -39,7 +40,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   bool itsmyproduct = false;
   bool _isLoading = true;
-  bool _isEditing = false;
 
   final TextEditingController userid = TextEditingController();
 
@@ -67,7 +67,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       if (response.statusCode == 200) {
         var responseData = jsonDecode(response.body);
         print('productDetails :$productDetails');
-        Util.flushBarErrorMessage('$responseData', Icons.verified, Colors.green, context);
+        Util.flushBarErrorMessage('${responseData['message'].toString()}', Icons.verified, Colors.green, context);
         return responseData;
       } else {
         var responseData = jsonDecode(response.body);
@@ -123,25 +123,21 @@ class _ProductDetailsState extends State<ProductDetails> {
   void _shareProductDetails() async {
     try {
       // Define the text content to share
-      String productDetails = '''
-      HYUNDAI NEW I20 2023
-      Brand: Hyundai
-      Price: ₹3400 per day
-      Location: Kozhikode, Vadakara
-      Musthafa
-      Posted On: 1-3-2024
-      Description:
-      - Parking Sensors: Yes
-      - Power Steering: Yes
-      - Power Windows: Front & rear
-      - AM/FM Radio: Yes
-      - Rear parking Camera: Yes
+      String productDetailses = '''
+      Name:${productDetails['name']}
+      Category:${productDetails['category']}
+      SubCategory:${productDetails['subcategory']}
+      Brand:${productDetails['brand']}
+      Year:${productDetails['year']}
+      Location:${productDetails['location']}
+      Price: ₹${productDetails['price']}${productDetails['time_period']}
+      Descriptions:${productDetails['description']}
       ''';
 
       // Share the product details
       await FlutterShare.share(
         title: 'Product Details',
-        text: productDetails,
+        text: productDetailses,
       );
     } catch (e) {
       print('Error sharing: $e');
@@ -201,6 +197,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           itsmyproduct == false ?  InkWell(
             onTap: (){
+              print('pid:${widget.productId}');
+              print('cname:${productDetails['created_by']['name']}');
+              print('sid:${Util.userId}');
+              print('rid:${productDetails['created_by']['_id']}');
               Navigator.push(context, MaterialPageRoute(builder: (context)=> BuyyingChat(
                 productId: widget.productId,
                   customerName: productDetails['created_by']['name'],
@@ -330,15 +330,12 @@ class _ProductDetailsState extends State<ProductDetails> {
           },
 
               child: Icon(Icons.delete)):Container(),
-          SizedBox(width: 10,),
-          widget.createdUserId == Util.userId? InkWell(
-            onTap: (){
-              setState(() {
-                _isEditing = true;
-              });
-            },
-              child: Icon(Icons.edit)) : Container(),
-          SizedBox(width: 10,),
+          // widget.createdUserId == Util.userId? InkWell(
+          //   onTap: (){
+          //     setState(() {
+          //     });
+          //   },
+          //     child: Icon(Icons.edit)) : Container(),
           InkWell(
             onTap: (){
               _shareProductDetails();
@@ -350,9 +347,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
           SizedBox(width: 20,),
         ],
-        leading: InkWell(onTap: (){
-          Navigator.pop(context);
-        },child: const Icon(Icons.arrow_circle_left)),
+        leading: AppBarBackButton()
       ):
       AppBar(
         actions: [
@@ -584,7 +579,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             )),
                                         child: Padding(
                                           padding: EdgeInsets.all(10.0),
-                                          child: Row(children: [
+                                          child: Row(
+                                              children: [
                                             Icon(
                                               Icons.speed,
                                               size: 13,
@@ -601,9 +597,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   fontSize: 8,
                                                   color: AppColors.color1,
                                                 ),
-                                                                                          ),
+                                                ),
                                               )
-        
                                           ]),
                                         ),
                                       ),
@@ -617,7 +612,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   color: Color.fromRGBO(0, 106, 152, 0.25),
                                                   offset: Offset(2, 2),
                                                   spreadRadius: -2,
-                                                  blurRadius: 19)
+                                                  blurRadius: 19
+                                              )
                                             ],
                                             border: Border.all(
                                               width: 0.5,
@@ -766,91 +762,101 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     //     },
                                     //   );
                                     // },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width / 1.1,
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromRGBO(210, 220, 223, 0.62),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Row(
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                CircleAvatar(
-                                                  radius: 50,
-                                                  backgroundColor: AppColors.color1,
-                                                  child: Text(
-                                                    '${productDetails['created_by']['name'].toString().substring(0, 1)}',
+                                    child: InkWell(
+                                      onTap: (){
+                                        if(Util.userId != productDetails['created_by']['_id']){
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileWithProducts(
+                                            userID: productDetails['created_by']['_id'],
+                                          ),));
+                                        }
+                                        return null;
+                                      },
+                                      child: Container(
+                                        width: MediaQuery.of(context).size.width / 1.1,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromRGBO(210, 220, 223, 0.62),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 50,
+                                                    backgroundColor: AppColors.color1,
+                                                    child: Text(
+                                                      '${productDetails['created_by']['name'].toString().substring(0, 1)}',
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 28,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  productDetails['created_by']['is_active'] == 'Y'
+                                                      ? Positioned(
+                                                    bottom: 0,
+                                                    right: 10,
+                                                    child: Container(
+                                                      padding: const EdgeInsets.all(2),
+                                                      decoration: const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.verified,
+                                                        color: Colors.blue,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  )
+                                                      : Positioned(
+                                                    bottom: 0,
+                                                    right: 10,
+                                                    child: Container(
+                                                      padding: const EdgeInsets.all(2),
+                                                      decoration: const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.verified,
+                                                        color: Colors.grey,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${productDetails['created_by']['name']}',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 28,
-                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.5,
+                                                      color: AppColors.color1
                                                     ),
                                                   ),
-                                                ),
-                                                productDetails['created_by']['is_active'] == 'Y'
-                                                    ? Positioned(
-                                                  bottom: 0,
-                                                  right: 10,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(2),
-                                                    decoration: const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.white,
+                                                  Text(
+                                                    'Posted On: ${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(productDetails['createdAt']))}',
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 12,
+                                                      color: AppColors.color1,
                                                     ),
-                                                    child: const Icon(
-                                                      Icons.verified,
-                                                      color: Colors.blue,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                )
-                                                    : Positioned(
-                                                  bottom: 0,
-                                                  right: 10,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(2),
-                                                    decoration: const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: const Icon(
-                                                      Icons.verified,
-                                                      color: Colors.grey,
-                                                      size: 20,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '${productDetails['created_by']['name']}',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16,
-                                                    letterSpacing: 0.5,
-                                                    color: AppColors.color1
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Posted On: ${DateFormat('yyyy-MM-dd HH:mm a').format(DateTime.parse(productDetails['createdAt']))}',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 12,
-                                                    color: AppColors.color1,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

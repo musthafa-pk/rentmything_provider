@@ -3,7 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +13,11 @@ import 'package:rentmything/utils/utls.dart';
 import 'package:rentmything/view/favourite/favourite.dart';
 import 'package:rentmything/view/homeView/Machineries.dart';
 import 'package:rentmything/view/homeView/appliancescategory.dart';
+import 'package:rentmything/view/homeView/clothcatogory.dart';
 import 'package:rentmything/view/homeView/elctronicscategory.dart';
+import 'package:rentmything/view/homeView/furniturescategory.dart';
+import 'package:rentmything/view/homeView/landbuilding.dart';
+import 'package:rentmything/view/homeView/othercatogory.dart';
 import 'package:rentmything/view/homeView/popular.dart';
 import 'package:rentmything/view/homeView/searchPage.dart';
 import 'package:rentmything/view/homeView/searchresult.dart';
@@ -89,7 +95,11 @@ class _HomeViewState extends State<HomeView> {
     ElectronicsCategory(category: 'Electronics',),
     Machineries(category: 'Machineries',),
     Tools(category: 'Tools',),
-    AppliancesCategory(category: 'Appliances')
+    AppliancesCategory(category: 'Appliances'),
+    FurnituresCategory(category: 'Furnitures'),
+    ClothCatogory(category: 'Cloth'),
+    LandBuilding(category: 'Land & Building'),
+    OtherCatogory(category: 'Other'),
   ];
 
   final _Tabs = <Tab>[
@@ -98,11 +108,11 @@ class _HomeViewState extends State<HomeView> {
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/electronics.png'),height: 24,width: 24,),),text: 'Electronics',),
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/machinary.png'),height: 24,width: 24,),),text: 'Machineries',),
     const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Tools',),
-    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Appliances',),
-    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Furnitures',),
-    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Cloth',),
-    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Land & Building',),
-    const Tab(icon: SizedBox(child: Image(image: AssetImage('assets/icons/tools.png'),height: 24,width: 24,),),text: 'Other',),
+    Tab(icon: SizedBox(child: SvgPicture.asset('assets/icons/appliances.svg', height: 24, width: 24, color: Colors.white,),),text: 'Appliances',),
+    Tab(icon: SizedBox(child:SvgPicture.asset('assets/icons/sofa.svg', height: 24, width: 24, color: Colors.white,) ,),text: 'Furnitures',),
+    Tab(icon: SizedBox(child: SvgPicture.asset('assets/icons/clothes-hanger.svg', height: 24, width: 24, color: Colors.white )),text: 'Cloth',),
+    Tab(icon: SizedBox(child:SvgPicture.asset('assets/icons/house-building.svg', height: 24, width: 24, color: Colors.white )),text: 'Land & Building',),
+    Tab(icon: SizedBox(child: SvgPicture.asset('assets/icons/dot-pending.svg', height: 24, width: 24, color: Colors.white )),text: 'Other',),
   ];
 
 
@@ -135,165 +145,167 @@ class _HomeViewState extends State<HomeView> {
       length:_Tabs.length,
       child: SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height/3.5,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.color1,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Rent My Thing',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16),
-                          ),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const NotificationPage()));
-                                },
-                                child: Stack(
-                                  children: [
-                                    const SizedBox(
-                                      child: Image(
-                                        image: AssetImage(
-                                            'assets/icons/notification.png'),
-                                        height: 24,
-                                        width: 24,
-                                      ),
-                                    ),
-                                    // Positioned widget to place the notification count badge
-                                    Positioned(
-                                      right:0,
-                                      top: 0,
-                                      child: Container(
-                                        height: 10,
-                                        width: 10,
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          color:notificaitonlist.any((notification) => notification['read'] == 'N')? AppColors.color6 : Colors.transparent, // or any other color you want for the badge background
-                                          borderRadius: BorderRadius.circular(10),
+          body:  Column(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.color1,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Rent My Thing',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16),
+                            ),
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            const NotificationPage()));
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      const SizedBox(
+                                        child: Image(
+                                          image: AssetImage(
+                                              'assets/icons/notification.png'),
+                                          height: 20,
+                                          width: 20,
                                         ),
-
                                       ),
-                                    ),
-                                  ],
+                                      // Positioned widget to place the notification count badge
+                                      Positioned(
+                                        right:0,
+                                        top: 0,
+                                        child: Container(
+                                          height: 10,
+                                          width: 10,
+                                          padding: const EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                            color:notificaitonlist.any((notification) => notification['read'] == 'N')? AppColors.color6 : Colors.transparent, // or any other color you want for the badge background
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const FavouritePage()));
+                                  },
+                                  child: const SizedBox(
+                                    child: Image(
+                                      image:
+                                      AssetImage('assets/icons/favourite.png'),
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: AppColors.color2, borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 6,top: 6,bottom: 6),
+                          child: Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: SizedBox(
+                                  height: 35,
+                                    width: MediaQuery.of(context).size.width / 2.9,
+                                    child: TextField(
+                                      controller: _suggestionController,
+                                      onChanged: (value){
+                                        setState(() {
+                                          suggestions = getSuggestions(value);
+                                        });
+                                      },
+                                      style: TextStyle(color: AppColors.color1,fontSize: 12),
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'Location',
+                                          contentPadding: EdgeInsets.only(bottom: 10,left: 10,right: 10),
+                                          hintStyle: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400)),
+                                      onSubmitted: (value){
+                                        Navigator.push(context,MaterialPageRoute(builder: (context) => SearchPage(location: '${value}'),));
+                                      },
+                                    )),
                               ),
                               const SizedBox(
-                                width: 10,
+                                width: 10.0,
                               ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const FavouritePage()));
-                                },
-                                child: const SizedBox(
-                                  child: Image(
-                                    image:
-                                    AssetImage('assets/icons/favourite.png'),
-                                    height: 24,
-                                    width: 24,
-                                  ),
+                              Expanded(
+                                child: InkWell(
+                                    onTap: (){
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage(location:_suggestionController.text ,)));
+                                    },
+                                    child: Container(
+                                      child: Text('Search Now....',style: TextStyle(
+                                          color: Colors.white,
+                                        fontSize: 12
+                                      ),),
+                                    )
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: AppColors.color2, borderRadius: BorderRadius.circular(15)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8,top: 8,bottom: 8),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: SizedBox(
-                                  // height: 40,
-                                  width: MediaQuery.of(context).size.width / 2.9,
-                                  child: TextField(
-                                    controller: _suggestionController,
-                                    onChanged: (value){
-                                      setState(() {
-                                        suggestions = getSuggestions(value);
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'Location',
-                                        contentPadding: EdgeInsets.all(10),
-                                        suffixIcon: SizedBox(
-                                          height: 24,
-                                          width: 24,
-                                          child: Image(image: AssetImage('assets/icons/locationmarker.png'),),
-                                        ),
-                                        hintStyle: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w400)),
-                                  )),
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
-                             Expanded(
-                              child: InkWell(
-                                onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage(location:_suggestionController.text ,)));
-                                },
-                                child: Container(
-                                  child: Text('Search Now....',style: TextStyle(
-                                    color: AppColors.color2
-                                  ),),
-                                )
-                              ),
-                                                         ),
-                          ],
                         ),
                       ),
-                    ),
-                    TabBar(
-                      tabAlignment: TabAlignment.start,
+                      TabBar(
+                        tabAlignment: TabAlignment.start,
                         tabs: _Tabs,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      indicatorColor: Colors.white,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.white60,
-                      isScrollable:true,
-                      dividerHeight: 0,
-                      indicatorPadding: EdgeInsets.zero,
-                    ),
-                  ],
+                        indicatorSize: TabBarIndicatorSize.label,
+                        indicatorColor: Colors.white,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.white60,
+                        isScrollable:true,
+                        dividerHeight: 0,
+                        indicatorPadding: EdgeInsets.zero,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          body:  TabBarView(
-              children: _TabPages
+              Expanded(
+                child: TabBarView(
+                    children: _TabPages
+                ),
+              ),
+            ],
           ),
         ),
       ),

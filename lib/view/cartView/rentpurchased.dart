@@ -21,6 +21,8 @@ class RentPurchaseView extends StatefulWidget {
 class _RentPurchaseViewState extends State<RentPurchaseView> {
 
   List<dynamic> rentedData = [];
+
+
   Future<void> getRentedData() async {
     print('getting rented items');
     // Define the endpoint URL
@@ -40,7 +42,8 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
         print('get rented items success');
         var responseData = jsonDecode(response.body);
         print(responseData);
-        List<dynamic> filterData = responseData['data'].where((item) => item['prod_id']['created_by'] != Util.userId).toList();
+        List<dynamic> filterData = responseData['data'].where((item) => item['prod_id']['created_by'] != Util.userId
+            && item['rent_status'] != 'finished').toList();
         setState(() {
           rentedData.clear();
           rentedData.addAll(filterData);
@@ -106,6 +109,21 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
       child: ListView.builder(
         itemCount: rentedData.length,
         itemBuilder: (context, index) {
+          DateTime startDate =
+          DateTime.parse(rentedData[index]['start_date']);
+          DateTime endDate =
+          DateTime.parse(rentedData[index]['end_date']);
+          DateTime now = DateTime.now();
+          double progress = now.isBefore(endDate)
+              ? now
+              .difference(startDate)
+              .inDays
+              .toDouble() /
+              endDate
+                  .difference(startDate)
+                  .inDays
+                  .toDouble()
+              : 1.0;
           return Padding(
             padding:
             const EdgeInsets.only(left: 20, right: 20, top: 2, bottom: 2),
@@ -168,6 +186,7 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
                                         style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
+                                            color: AppColors.color1,
                                             letterSpacing: 1),
                                       ),
                                       const SizedBox(
@@ -246,7 +265,7 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
                                         SizedBox(
                                           width: 80,
                                           child: Flexible(
-                                            child: Text('10 Month Agreement',
+                                            child: Text('${rentedData[index]['agreementDuration']['days']} Days agreement',
                                                 style: TextStyle(
                                                     fontSize: 8,
                                                     fontWeight: FontWeight.w400,
@@ -277,7 +296,7 @@ class _RentPurchaseViewState extends State<RentPurchaseView> {
                                       padding: EdgeInsets.only(
                                           top: 10.0, bottom: 10.0),
                                       child: LinearProgressIndicator(
-                                        value: 0.5,
+                                        value: progress,
                                         backgroundColor:
                                         Color.fromRGBO(217, 217, 217, 1),
                                         color: Color.fromRGBO(25, 178, 0, 1),

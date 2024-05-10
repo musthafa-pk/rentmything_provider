@@ -137,7 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             Text('Welcome to',
                                 style: TextStyle(fontSize: 16,color: AppColors.color1)),
-                            Text(' Rent My Thing !',
+                            Text(' Rent My Thi'
+                                'ng !',
                                 style: TextStyle(fontSize: 16,color: Colors.red,fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -162,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: userController,
                     focusNode: emailFocusNode,
                     decoration: InputDecoration(
-                      hintText: 'User ID',
+                      hintText: 'Email or Phone number',
                       suffixIcon: Icon(Icons.person),
                       hintStyle: TextStyle(fontSize: 13,color: AppColors.color1),
                       // Set maximum input length to 25 characters

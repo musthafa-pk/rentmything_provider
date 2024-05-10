@@ -4,6 +4,8 @@ import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/view/splashView/successView.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../res/components/myButton.dart';
+
 class HelpAndSupportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/view/cartView/cartView.dart';
 import 'package:rentmything/view/chatView/chatView.dart';
 import 'package:rentmything/view/homeView/homeScreen.dart';
 import 'package:rentmything/view/myAdView/myAdView.dart';
 import 'package:rentmything/view/profileView/profileView.dart';
+
+import '../utils/utls.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({Key? key});
@@ -14,6 +17,7 @@ class BottomNavigationPage extends StatefulWidget {
 }
 
 class _BottomNavigationPageState extends State<BottomNavigationPage> {
+
   DateTime? currentBackPressTime;
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
@@ -47,20 +51,23 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Exit'),
-            content: Text('Do you want to exit the app?'),
+            title: Text('Exit',style: TextStyle(color: AppColors.color1),),
+            content: Text('Do you want to exit the app?',style: TextStyle(
+              color: AppColors.color1
+            ),),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(false); // Return false to cancel the pop
                 },
-                child: Text('No'),
+                child: Text('No',style: TextStyle(color: AppColors.color1),),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true); // Return true to proceed with pop
                 },
-                child: Text('Yes'),
+                child: Text('Yes',style: TextStyle(color: AppColors.color1
+                ),),
               ),
             ],
           );
@@ -68,6 +75,12 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
       );
       return exitConfirmed;
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
 
@@ -95,7 +108,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             ),
             BottomNavigationBarItem(
               icon: SizedBox(height: 24, width: 24, child: Image.asset('assets/icons/cart.png')),
-              label: 'Cart',
+              label: 'Rent',
             ),
             BottomNavigationBarItem(
               icon: SizedBox(height: 24, width: 24, child: Image.asset('assets/icons/profile.png')),

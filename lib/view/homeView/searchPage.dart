@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
 import 'package:rentmything/utils/utls.dart';
@@ -230,6 +231,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
                                 letterSpacing: 1,
+                                color: AppColors.color1
                               ),
                             ),
                             Padding(
@@ -245,10 +247,15 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.location_pin,
-                                  color: Colors.blue,
-                                  size: 16,
+                                InkWell(
+                                  onTap:(){
+
+                                  },
+                                  child: const Icon(
+                                    Icons.location_pin,
+                                    color: Colors.blue,
+                                    size: 16,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -280,7 +287,9 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildSearchList() {
     if (_suggestions.isEmpty) {
       // Return an empty container if there are no search results
-      return Center(child: Text('No search data'));
+      return Center(child: SizedBox(
+        height: 150,width: 150,
+          child: Lottie.asset('assets/lottie/nodatafound.json')));
     } else {
       // Return the search results list
       return _buildSearchResultsList();
@@ -296,11 +305,58 @@ class _SearchPageState extends State<SearchPage> {
         child: Icon(Icons.filter_list_alt,color: Colors.white,),
       ),
       key: _scaffoldKey,
+      drawer: SafeArea(
+        child:Drawer(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    Center(child: Text('Filter', style: TextStyle(color: AppColors.color1))),
+                    ExpansionTile(
+                      title: Text('Price Range', style: TextStyle(color: AppColors.color1)),
+                      children: [
+                        // Add your price range selection widget here
+                        RangeSlider(
+                          values: _currentRangeValues,
+                          min: 0,
+                          max: 1000,
+                          divisions: 100,
+                          onChanged: (RangeValues values) {
+                            setState(() {
+                              _currentRangeValues = values;
+                            });
+                          },
+                          labels: RangeLabels(
+                            _currentRangeValues.start.round().toString(),
+                            _currentRangeValues.end.round().toString(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.color1
+                ),
+                onPressed: () {
+                  // Add your logic to apply the price range filter here
+                },
+                child: Text('Apply Filter',style: TextStyle(
+                  color: Colors.white
+                ),),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Builder(
         builder: (context) {
           return Column(
             children: [
-
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.color1,
@@ -314,10 +370,60 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Row(
                             children: [
-                              SizedBox(
-                                height: 15,
-                                width: 15,
-                                child: Image(image: AssetImage('assets/icons/locationmarker.png')),
+                              InkWell(
+                                onTap:(){
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      String location = widget.location.toString(); // variable to store the location
+                                      return AlertDialog(
+                                        title: Text('Enter Location',style: TextStyle(color: AppColors.color1),),
+                                        content: Container(
+                                          height: MediaQuery.of(context).size.height/5,
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                controller:newlocationController ,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    newlocationController.text = value;
+                                                    widget.location = value;
+                                                  });
+                                                },
+                                                style: TextStyle(color: AppColors.color1),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Enter location',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(); // close the dialog
+                                            },
+                                            child: Text('Cancel',style: TextStyle(color: AppColors.color1),),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              // Handle submit button action here, you can use the location variable
+                                              print('Location submitted: $location');
+                                              Navigator.of(context).pop(); // close the dialog
+                                              searchapi('$location');
+                                            },
+                                            child: Text('Submit',style: TextStyle(color: AppColors.color1),),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: Image(image: AssetImage('assets/icons/locationmarker.png')),
+                                ),
                               ),
                               SizedBox(width: 10,),
                               InkWell(
@@ -329,34 +435,25 @@ class _SearchPageState extends State<SearchPage> {
 
                                       return AlertDialog(
                                         title: Text('Enter Location'),
-                                        content: Column(
-                                          children: [
-                                            TextFormField(
-                                              controller:newlocationController ,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  newlocationController.text = value;
-                                                  widget.location = value;
-                                                });
-                                              },
-                                              decoration: InputDecoration(
-                                                hintText: 'Enter location',
+                                        content: Container(
+                                          height: MediaQuery.of(context).size.height/5,
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                controller:newlocationController ,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    newlocationController.text = value;
+                                                    widget.location = value;
+                                                  });
+                                                },
+                                                style: TextStyle(color: AppColors.color1),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Enter location',
+                                                ),
                                               ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                // Handle picking current location here
-                                                print('Picking current location...');
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.location_on, color: Colors.white),
-                                                  SizedBox(width: 8),
-                                                  Text('Use Current Location', style: TextStyle(color: Colors.white)),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         actions: [
                                           TextButton(
@@ -428,59 +525,10 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               Expanded(child: _buildSearchList()), // Use _buildSearchList() instead of _buildPopularProductsList()
-              Visibility(
-                visible: isFilterDrawerOpen,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3,
-                  decoration: BoxDecoration(
-                    color: AppColors.color1,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(child: Text('Filter Data',style: TextStyle(color: Colors.white),)),
-                        Text(
-                          'Price Range',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        RangeSlider(
-                          values: _currentRangeValues,
-                          min: 0,
-                          max: 10000,
-                          divisions: 1000,
-                          activeColor: Colors.white,
-                          inactiveColor: AppColors.color2,
-                          onChanged: (RangeValues values) {
-                            setState(() {
-                              _currentRangeValues = values;
-                              print('_currentRangeValues:${_currentRangeValues}');
-                            });
-                          },
-                          labels: RangeLabels(
-                            _currentRangeValues.start.toString(),
-                            _currentRangeValues.end.toString(),
-                          ),
-                        ),
-                        ElevatedButton(onPressed: (){}, child: Text('Apply filter'))
-                      ],
-                    ),
-                  ),
-                ),
-              )
-
             ],
           );
         }
       ),
     );
   }
-
-
 }

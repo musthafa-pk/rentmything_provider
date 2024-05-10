@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rentmything/res/app_colors.dart';
 import 'package:rentmything/res/app_url.dart';
+import 'package:rentmything/res/components/AppBarBackButton.dart';
 import 'package:rentmything/utils/utls.dart';
 
 class BuyyingChat extends StatefulWidget {
@@ -92,9 +93,6 @@ class _BuyyingChatState extends State<BuyyingChat> {
     }
   }
 
-
-
-
   void getChat() async {
     String url = AppUrl.getsinglechat;
     Map<String, dynamic> body = {
@@ -125,6 +123,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
         throw Exception('Failed to make POST request. Status code: ${response.statusCode}, Body: ${response.body}');
       }
     } catch (error) {
+      print('error is :$error');
       throw error;
     }
   }
@@ -142,11 +141,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
   void _scrollListener() {
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels == 0) {
-        // At the top of the list
-        // Optionally, you can fetch more messages if needed
       } else {
-        // At the bottom of the list
-        // This is not necessary for your case, but you can add additional logic here if needed
       }
     }
   }
@@ -163,17 +158,12 @@ class _BuyyingChatState extends State<BuyyingChat> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_back),
-        ),
+        leading: AppBarBackButton(),
         title: Row(
           children: [
             CircleAvatar(radius: 20,
             backgroundColor: AppColors.color1,
-            child: Text(widget.customerName.toString().substring(0,1),style: TextStyle(
+            child: Text(widget.customerName.toString().substring(0,1).toUpperCase(),style: TextStyle(
               color: Colors.white
             ),),),
             Padding(
@@ -181,7 +171,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text('${widget.customerName}',style: TextStyle(fontSize: 18),),
+                  Text('${widget.customerName}',style: TextStyle(fontSize: 18),),
                   Text('online',style: TextStyle(fontSize: 12,color: Colors.green),)
                 ],
               ),
@@ -202,112 +192,113 @@ class _BuyyingChatState extends State<BuyyingChat> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // Container(
-                    //   height: 80,
-                    //   width: 80,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.black,
-                    //     borderRadius: BorderRadius.circular(15),
-                    //     image: DecorationImage(
-                    //       image: NetworkImage(
-                    //         productDetails['image'] != null && productDetails['image'].isNotEmpty ? productDetails['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
-                    //       ),
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 20),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            productDetails['image'] != null && productDetails['image'].isNotEmpty ? productDetails['image'][0] : 'https://via.placeholder.com/150', // Display the first image if available, otherwise display a placeholder image
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
                      Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      // children: [
-                      //   Padding(
-                      //     padding: EdgeInsets.all(8.0),
-                      //     child: Text(
-                      //       '${productDetails['name']}',
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontSize: 16,
-                      //         fontWeight: FontWeight.w500,
-                      //       ),
-                      //     ),
-                      //   ),
-                      //   Padding(
-                      //     padding: EdgeInsets.all(8.0),
-                      //     child: Text(
-                      //       'Posted On :${Util.formatDateTime(productDetails['created_by']['createdAt'])}',
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontWeight: FontWeight.w400,
-                      //         fontSize: 12,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ],
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            '${productDetails['name']}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'Posted On :${Util.formatDateTime(productDetails['created_by']['createdAt'])}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            // Expanded(
-            //   child: StreamBuilder<List<dynamic>>(
-            //     stream: _messageStreamController.stream,
-            //     builder: (context, snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.waiting) {
-            //         return Center(child: CircularProgressIndicator());
-            //       } else if (snapshot.hasError) {
-            //         return Center(child: Text('Error: ${snapshot.error}'));
-            //       } else {
-            //         return ListView.builder(
-            //           controller: _scrollController,
-            //           itemCount: snapshot.data?.length ?? 0,
-            //           itemBuilder: (context, index) {
-            //             // bool isSentByMe = snapshot.data?[index]['sender_id'] == Util.userId;
-            //             // print(isSentByMe);
-            //             return buildMessage(
-            //                 isSentByMe: snapshot.data?[index]['sender_id'] == Util.userId ? true : false,
-            //                 message: '${snapshot.data?[index]['message']}',
-            //               senderName: '${snapshot.data?[index]['sender_id']['name']}'
-            //             );
-            //           },
-            //         );
-            //       }
-            //     },
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Row(
-            //     children: [
-            //       Expanded(
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             color: AppColors.color2,
-            //             borderRadius: BorderRadius.circular(15),
-            //           ),
-            //           child: TextFormField(
-            //             controller: _messageController,
-            //             decoration: const InputDecoration(
-            //                 contentPadding: EdgeInsets.only(left: 10),
-            //                 hintText: 'Type your message...',
-            //                 border: InputBorder.none,
-            //
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //       IconButton(
-            //         onPressed: () {
-            //           setState(() {
-            //             sendMessage();
-            //             _messageController.clear();
-            //             getChat();
-            //           });
-            //         },
-            //         icon: const Icon(Icons.send),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            Expanded(
+              child: StreamBuilder<List<dynamic>>(
+                stream: _messageStreamController.stream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: snapshot.data?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        // bool isSentByMe = snapshot.data?[index]['sender_id'] == Util.userId;
+                        // print(isSentByMe);
+                        return buildMessage(
+                            isSentByMe: snapshot.data?[index]['sender_id'] == Util.userId ? true : false,
+                            message: '${snapshot.data?[index]['message']}',
+                          senderName: '${snapshot.data?[index]['sender_id']['name']}'
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.color2,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextFormField(
+                        controller: _messageController,
+                        style: TextStyle(color: AppColors.color1),
+                        decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 10),
+                            hintText: 'Type your message...',
+                            border: InputBorder.none,
+
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        sendMessage();
+                        _messageController.clear();
+                        getChat();
+                      });
+                    },
+                    icon: const Icon(Icons.send),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -380,7 +371,7 @@ class _BuyyingChatState extends State<BuyyingChat> {
         ),
         if (isSentByMe)
           Padding(
-            padding: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left: 8,top: 10),
             child: CircleAvatar(
               radius: 12,
               backgroundColor: AppColors.color1,
@@ -396,6 +387,4 @@ class _BuyyingChatState extends State<BuyyingChat> {
       ],
     );
   }
-
-
 }

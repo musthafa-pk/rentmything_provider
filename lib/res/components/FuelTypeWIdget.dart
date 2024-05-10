@@ -51,7 +51,7 @@ class _FuelTypeState extends State<FuelType> {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: isSelected ? Colors.white : null),
+            style: TextStyle(color: isSelected ? Colors.white : AppColors.color1),
           ),
         ),
       ),
